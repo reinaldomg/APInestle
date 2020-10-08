@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HBSIS.Padawan.Produtos.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HBSIS.Padawan.Produtos.Infra.Context
 {
@@ -12,9 +13,12 @@ namespace HBSIS.Padawan.Produtos.Infra.Context
         public MainContext()
         {
         }
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder) =>
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MainContext).Assembly);
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           modelBuilder.ApplyConfigurationsFromAssembly(typeof(MainContext).Assembly);
+
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,5 +29,7 @@ namespace HBSIS.Padawan.Produtos.Infra.Context
                     .UseSqlServer("DefaultConnection");
             }
         }
+
+        public DbSet<Fornecedor> Fornecedor { get; set; }
     }
 }

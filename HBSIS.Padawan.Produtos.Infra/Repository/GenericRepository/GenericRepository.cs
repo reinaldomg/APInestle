@@ -9,41 +9,51 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
 {
-    public class GenericRepository<TEntity>
+    public abstract class GenericRepository<TEntity>
         : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly MainContext _dbContext;
-        protected readonly DbSet<TEntity> _dbSet;
+        protected DbSet<TEntity> _dbSet;
         
         public GenericRepository(MainContext dbContext)
         {
             _dbContext = dbContext;
+
             _dbSet = dbContext.Set<TEntity>();
+
         }
         
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return _dbSet.Find(id);
         }
 
         public async Task CreateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
+            
+            _dbSet.Add(entity);
+
+            _dbContext.SaveChanges();
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
         public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var del = _dbSet.Find(id);
+            _dbSet.Remove(del);
+            _dbContext.SaveChanges();
         }
 
         public Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return (Task<IEnumerable<TEntity>>)_dbSet.AsAsyncEnumerable();
         }
 
         protected IQueryable Query() => _dbSet.AsNoTracking();

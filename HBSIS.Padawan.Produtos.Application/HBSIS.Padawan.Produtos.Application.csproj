@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models" />
-      <Folder Include="Services" />
+      <ProjectReference Include="..\HBSIS.Padawan.Produtos.Domain\HBSIS.Padawan.Produtos.Domain.csproj" />
+      <ProjectReference Include="..\HBSIS.Padawan.Produtos.Infra\HBSIS.Padawan.Produtos.Infra.csproj" />
     </ItemGroup>
 
 </Project>

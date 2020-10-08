@@ -5,7 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HBSIS.Padawan.Produtos.Application\HBSIS.Padawan.Produtos.Application.csproj" />
       <ProjectReference Include="..\HBSIS.Padawan.Produtos.Infra\HBSIS.Padawan.Produtos.Infra.csproj" />
     </ItemGroup>
+
+    <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
