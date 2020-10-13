@@ -11,24 +11,23 @@ using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Web.Controllers
 {
+    
     [ApiController]
-    [Route("Fornecedor")]
+    [Route("api/[controller]")]
     public class FornecedorController : ControllerBase
     {
+        private readonly IFornecedorService _fornecedorService;
 
-        private IFornecedorServices _ifornecedorServices;
-
-        public FornecedorController(IFornecedorServices fornecedorServices)
+        public FornecedorController(IFornecedorService fornecedorService)
         {
-            _ifornecedorServices = fornecedorServices;
+            _fornecedorService = fornecedorService;
         }
 
         [HttpPost]
-        [Route("Criar")]
+        [Route("Cadastrar")]
         public IActionResult Post(Fornecedor fornecedor)
         {
- 
-            var result = _ifornecedorServices.CreateFornecedor(fornecedor);
+            var result = _fornecedorService.CreateFornecedor(fornecedor);
 
             if (result.IsValid)
                 return Ok("ok");

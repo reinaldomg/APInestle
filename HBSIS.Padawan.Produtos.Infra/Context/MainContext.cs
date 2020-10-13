@@ -30,6 +30,5 @@ namespace HBSIS.Padawan.Produtos.Infra.Context
             }
         }
 
-        public DbSet<Fornecedor> Fornecedor { get; set; }
     }
 }

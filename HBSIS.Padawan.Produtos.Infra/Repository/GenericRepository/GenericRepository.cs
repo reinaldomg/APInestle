@@ -13,26 +13,26 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
         : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly MainContext _dbContext;
-        protected DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> DbSet;
         
         public GenericRepository(MainContext dbContext)
         {
             _dbContext = dbContext;
 
-            _dbSet = dbContext.Set<TEntity>();
+            DbSet = dbContext.Set<TEntity>();
 
         }
         
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            return _dbSet.Find(id);
+            return await DbSet.FindAsync(id);
         }
 
         public async Task CreateAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
             
-            _dbSet.Add(entity);
+            DbSet.Add(entity);
 
             _dbContext.SaveChanges();
         }
@@ -46,16 +46,16 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
 
         public async Task DeleteAsync(int id)
         {
-            var del = _dbSet.Find(id);
-            _dbSet.Remove(del);
+            var entity = DbSet.Find(id);
+            DbSet.Remove(entity);
             _dbContext.SaveChanges();
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return (Task<IEnumerable<TEntity>>)_dbSet.AsAsyncEnumerable();
+            return await DbSet.ToListAsync();
         }
 
-        protected IQueryable Query() => _dbSet.AsNoTracking();
+        protected IQueryable Query() => DbSet.AsNoTracking();
     }
 }

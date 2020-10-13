@@ -34,22 +34,19 @@ namespace HBSIS.Padawan.Produtos.Web
             services.AddDbContext<MainContext>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddScoped<IFornecedorRepository,FornecedorRepository>();
-            services.AddScoped<IFornecedorServices, FornecedorServices>();
+            services.AddScoped<IFornecedorService, FornecedorService>();
             services.AddCors();
 
             
-        //SWAGGER----------------------------------
-        services.AddSwaggerGen(c =>
-        {
-         c.SwaggerDoc("v1", new OpenApiInfo
-         {
-                    Title = "ProjetoNestle",
-                    Version = "v1",
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                 {
+                        Title = "ProjetoNestle",
+                        Version = "v1",
                 });
-            });
-            //------------------------------------------
-
-
+             });
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -79,15 +76,13 @@ namespace HBSIS.Padawan.Produtos.Web
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 
-            //SWAGGER----------------------------------
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 ProjetoNestle");
                 c.DocExpansion(DocExpansion.None);
             });
-            //------------------------------------------
+
 
         }
 

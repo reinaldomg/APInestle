@@ -1,10 +1,11 @@
-﻿using System;
+﻿using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Result
 {
-    public class Result<T>
+    public class Result<T> 
     {
         public Result()
         {
@@ -17,8 +18,6 @@ namespace HBSIS.Padawan.Produtos.Domain.Result
         public bool IsValid { get; set; } = true;
         public List<string> ErrorList { get; set; } = new List<string>();
         public T Entity { get; set; }
-
-
 
     }
 }
