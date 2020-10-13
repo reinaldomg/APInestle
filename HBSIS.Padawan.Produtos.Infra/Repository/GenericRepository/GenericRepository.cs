@@ -9,43 +9,53 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
 {
-    public class GenericRepository<TEntity>
+    public abstract class GenericRepository<TEntity>
         : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly MainContext _dbContext;
-        protected readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> DbSet;
         
         public GenericRepository(MainContext dbContext)
         {
             _dbContext = dbContext;
-            _dbSet = dbContext.Set<TEntity>();
+
+            DbSet = dbContext.Set<TEntity>();
+
         }
         
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await DbSet.FindAsync(id);
         }
 
         public async Task CreateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
+            
+            DbSet.Add(entity);
+
+            _dbContext.SaveChanges();
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
         public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = DbSet.Find(id);
+            DbSet.Remove(entity);
+            _dbContext.SaveChanges();
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await DbSet.ToListAsync();
         }
 
-        protected IQueryable Query() => _dbSet.AsNoTracking();
+        protected IQueryable Query() => DbSet.AsNoTracking();
     }
 }
