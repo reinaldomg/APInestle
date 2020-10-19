@@ -18,37 +18,44 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
         public GenericRepository(MainContext dbContext)
         {
             _dbContext = dbContext;
-
             DbSet = dbContext.Set<TEntity>();
-
         }
         
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            var entity = await DbSet.FindAsync(id);
+            _dbContext.Entry(entity).State = EntityState.Detached;
+            return entity;
+        }
+
+        public async Task<bool> ExistsByIdAsync(Guid Id)
+        {
+            var entity = await DbSet.FindAsync(Id);
+            _dbContext.Entry(entity).State = EntityState.Detached;
+            if (entity != null)
+                return true;
+            return false;           
         }
 
         public async Task CreateAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
-            
             DbSet.Add(entity);
-
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException($"A sua {entity} é nula");
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
-            var entity = DbSet.Find(id);
+            var entity = await DbSet.FindAsync(id);
             DbSet.Remove(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()

@@ -5,7 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations" />
+      <Compile Remove="Migrations\20201016170355_TesteCorrecao.cs" />
+      <Compile Remove="Migrations\20201016170355_TesteCorrecao.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>

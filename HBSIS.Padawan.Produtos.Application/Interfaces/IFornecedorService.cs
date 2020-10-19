@@ -4,11 +4,12 @@ using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace HBSIS.Padawan.Produtos.Application.Services
+namespace HBSIS.Padawan.Produtos.Application.Interfaces
 {
-    public interface IFornecedorServices 
+    public interface IFornecedorService 
     {
-        Result<Fornecedor> CreateFornecedor(Fornecedor fornecedor);
+        public Task<Result<Fornecedor>> CreateFornecedorAsync(Fornecedor fornecedor);
     }
 }

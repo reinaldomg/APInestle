@@ -1,4 +1,5 @@
-﻿using HBSIS.Padawan.Produtos.Application.Services;
+﻿using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Services;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Infra.Context;
 using HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository;
@@ -25,9 +26,9 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
 
         [HttpPost]
         [Route("Cadastrar")]
-        public IActionResult Post(Fornecedor fornecedor)
+        public async Task<IActionResult> Post(Fornecedor fornecedor)
         {
-            var result = _fornecedorService.CreateFornecedor(fornecedor);
+            var result = await _fornecedorService.CreateFornecedorAsync(fornecedor);
 
             if (result.IsValid)
                 return Ok("ok");

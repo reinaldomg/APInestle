@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HBSIS.Padawan.Produtos.Application;
+using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Services;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Validators;
 using HBSIS.Padawan.Produtos.Infra.Context;
 using HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository;
 using Microsoft.AspNetCore.Builder;
@@ -33,8 +36,9 @@ namespace HBSIS.Padawan.Produtos.Web
         {
             services.AddDbContext<MainContext>(op => op.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
-            services.AddScoped<IFornecedorRepository,FornecedorRepository>();
-            services.AddScoped<IFornecedorService, FornecedorService>();
+
+            services.Injetar();
+
             services.AddCors();
 
             

@@ -8,7 +8,7 @@ using HBSIS.Padawan.Produtos.Domain.Interfaces;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators
 {
-    public class FornecedorValidator : Result<Fornecedor>, IFornecedorValidator
+    public class FornecedorValidator : IFornecedorValidator
     {
 
         public Result<Fornecedor> FornecedorValidate(Fornecedor fornecedor)
