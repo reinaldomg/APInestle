@@ -17,6 +17,8 @@ namespace HBSIS.Padawan.Produtos.Application
             services.AddScoped<ICategoriaProdutoRepository, CategoriaProdutoRepository>();
             services.AddScoped<ICategoriaProdutoService, CategoriaProdutoService>();
             services.AddScoped<ICategoriaProdutoValidator, CategoriaProdutoValidator>();
+
+            services.AddScoped<ICSVService, CSVService>();
         }
     }
 }

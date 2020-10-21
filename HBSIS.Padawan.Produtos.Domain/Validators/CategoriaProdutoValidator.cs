@@ -20,39 +20,39 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
         }
 
 
-        public async Task<Result<CategoriaProduto>> CategoriaProdutoCreateValidate(CategoriaProduto categoriaProduto)
+        public async Task<Result<CategoriaProduto>> CreateValidate(CategoriaProduto categoriaProduto)
         {
             var result = new Result<CategoriaProduto>();
-            result = await CamposObrigatoriosValidador(categoriaProduto); 
+            result = await ValidarCamposObrigatorios(categoriaProduto); 
             return result;
         }
 
-        public async Task<Result<CategoriaProduto>> CategoriaProdutoIdValidate(Guid Id)
+        public async Task<Result<CategoriaProduto>> IdValidate(Guid Id)
         {
-            var result = await ExisteCategoriaValidador(Id); 
+            var result = await ExisteCategoria(Id); 
             return result;
         }
 
-        public async Task<Result<CategoriaProduto>> CategoriaProdutoUpdateValidate(CategoriaProduto categoriaProduto)
+        public async Task<Result<CategoriaProduto>> UpdateValidate(CategoriaProduto categoriaProduto)
         {
-            var result = await ExisteCategoriaValidador(categoriaProduto.Id);
+            var result = await ExisteCategoria(categoriaProduto.Id);
 
             if (!result.IsValid)
             {
                 return result;
             }
             else
-                result = await CamposObrigatoriosValidador(categoriaProduto);
+                result = await ValidarCamposObrigatorios(categoriaProduto);
            
             return result;
         }
 
-        private async Task<bool> ExisteFornecedorValidador(Guid fornecedor)
+        private async Task<bool> ExisteFornecedor(Guid fornecedor)
         {
             return await _fornecedorRepository.ExistsByIdAsync(fornecedor);
         }
 
-        private async Task<Result<CategoriaProduto>> CamposObrigatoriosValidador(CategoriaProduto categoriaProduto)
+        private async Task<Result<CategoriaProduto>> ValidarCamposObrigatorios(CategoriaProduto categoriaProduto)
         {
             var result = new Result<CategoriaProduto>();
 
@@ -61,7 +61,7 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
                 result.IsValid = false;
                 result.ErrorList.Add("Nome é inválido");
             }
-            if (categoriaProduto.FornecedorId == null || !(await ExisteFornecedorValidador(categoriaProduto.FornecedorId)))
+            if (categoriaProduto.FornecedorId == null || !(await ExisteFornecedor(categoriaProduto.FornecedorId)))
             {
                 result.IsValid = false;
                 result.ErrorList.Add("Id de referência a Fornecedor é inválido");
@@ -70,7 +70,7 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
             return result;
         }
 
-        private async Task<Result<CategoriaProduto>> ExisteCategoriaValidador(Guid id)
+        private async Task<Result<CategoriaProduto>> ExisteCategoria(Guid id)
         {
             var result = new Result<CategoriaProduto>();
 

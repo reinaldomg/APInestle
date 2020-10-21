@@ -22,7 +22,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services
 
         public async Task<Result<CategoriaProduto>> CreateAsync(CategoriaProduto categoriaProduto)
         {
-            var result = await _categoriaProdutoValidator.CategoriaProdutoCreateValidate(categoriaProduto);
+            var result = await _categoriaProdutoValidator.CreateValidate(categoriaProduto);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.CreateAsync(categoriaProduto);
@@ -32,7 +32,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services
 
         public async Task<Result<CategoriaProduto>> DeleteAsync(Guid Id)
         {
-            var result = await _categoriaProdutoValidator.CategoriaProdutoIdValidate(Id);
+            var result = await _categoriaProdutoValidator.IdValidate(Id);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.DeleteAsync(Id);
@@ -47,7 +47,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services
 
         public async Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto)
         {
-            var result = await _categoriaProdutoValidator.CategoriaProdutoUpdateValidate(categoriaProduto);
+            var result = await _categoriaProdutoValidator.UpdateValidate(categoriaProduto);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.UpdateAsync(categoriaProduto);
