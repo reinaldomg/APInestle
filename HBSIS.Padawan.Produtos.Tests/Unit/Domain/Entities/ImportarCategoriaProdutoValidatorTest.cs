@@ -52,11 +52,14 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = await _importarCategoriaProdutoValidator.Importar(cnpj,nome);
 
             Assert.Equal(validar, result.IsValid);
+            if (!validar)
+            {
+                Assert.Equal($"CNPJ não cadastrado: {cnpj}", result.ErrorList.SingleOrDefault());
+            }
         }
 
         [Theory]
         [InlineData("Doce",true)]
-        [InlineData("",false)]
         [InlineData("Banana",false)]
         public async void Validar_Nome_Valido(string nome, bool validar)
         {
@@ -70,6 +73,31 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = await _importarCategoriaProdutoValidator.Importar(cnpj, nome);
 
             Assert.Equal(validar, result.IsValid);
+            if (!validar)
+            {
+                Assert.Equal($"Nome de categoria já cadastrado: {nome}", result.ErrorList.SingleOrDefault());
+            }
+        }
+
+        [Theory]
+        [InlineData("Doce", true)]
+        [InlineData("", false)]
+        public async void Validar_Nome_Existe(string nome, bool validar)
+        {
+            var fornecedor = GerarFornecedorValido();
+            string cnpj = "10029717532343";
+
+            _categoriaProdutoRepository.GetByName("Banana").Returns(true);
+            _fornecedorRepository.GetByCnpj("10029717532343").Returns(true);
+            _fornecedorRepository.GetEntityByCnpj("10029717532343").Returns(fornecedor);
+
+            var result = await _importarCategoriaProdutoValidator.Importar(cnpj, nome);
+
+            Assert.Equal(validar, result.IsValid);
+            if (!validar)
+            {
+                Assert.Equal($"Nome é inválido: {nome}", result.ErrorList.SingleOrDefault());
+            }
         }
     }
 }
