@@ -61,7 +61,12 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
                 result.IsValid = false;
                 result.ErrorList.Add("Nome é inválido");
             }
-            if (categoriaProduto.FornecedorId == null || !(await ExisteFornecedor(categoriaProduto.FornecedorId)))
+            if(await _categoriaProdutoRepository.GetByName(categoriaProduto.Nome))
+            {
+                result.IsValid = false;
+                result.ErrorList.Add("Categoria já cadastrada");
+            }
+            if (categoriaProduto.FornecedorId == Guid.Empty|| !(await ExisteFornecedor(categoriaProduto.FornecedorId)))
             {
                 result.IsValid = false;
                 result.ErrorList.Add("Id de referência a Fornecedor é inválido");

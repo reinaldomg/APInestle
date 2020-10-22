@@ -10,6 +10,12 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
 {
     public class FornecedorValidator : IFornecedorValidator
     {
+        private readonly IFornecedorRepository _fornecedorRepository;
+
+        public FornecedorValidator(IFornecedorRepository fornecedorRepository)
+        {
+            _fornecedorRepository = fornecedorRepository;
+        }
 
         public Result<Fornecedor> FornecedorValidate(Fornecedor fornecedor)
         {
@@ -18,6 +24,11 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
             {
                 result.IsValid = false;
                 result.ErrorList.Add("O CNPJ não é válido");
+            }
+            if (_fornecedorRepository.GetByCnpj(fornecedor.Cnpj).Result)
+            {
+                result.IsValid = false;
+                result.ErrorList.Add("O CNPJ já está cadastrado");
             }
             if (string.IsNullOrEmpty(fornecedor.Endereco) || fornecedor.Endereco.Length > 500)
             {

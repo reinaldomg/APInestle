@@ -8,6 +8,7 @@ namespace HBSIS.Padawan.Produtos.Domain.Interfaces
 {
     public interface IFornecedorRepository : IGenericRepository<Fornecedor>
     {
-       
+        Task<bool> GetByCnpj(string cnpj);
+        Task<Fornecedor> GetEntityByCnpj(string cnpj);
     }
 }

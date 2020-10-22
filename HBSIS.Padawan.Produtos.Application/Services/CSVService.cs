@@ -3,10 +3,12 @@ using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Result;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,10 +17,12 @@ namespace HBSIS.Padawan.Produtos.Application.Services
     public class CSVService : ICSVService
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
+        private readonly IImportarCategoriaProdutoValidator _importarCategoriaProdutoValidator;
 
-        public CSVService(ICategoriaProdutoRepository categoriaProdutoRepository)
+        public CSVService(ICategoriaProdutoRepository categoriaProdutoRepository, IImportarCategoriaProdutoValidator importarCategoriaProdutoValidator)
         {
             _categoriaProdutoRepository = categoriaProdutoRepository;
+            _importarCategoriaProdutoValidator = importarCategoriaProdutoValidator;
         }
 
         public async Task<byte[]> ExportarCSV()
@@ -44,6 +48,45 @@ namespace HBSIS.Padawan.Produtos.Application.Services
                 writer.Flush();
                 return memory.ToArray();
             }         
+        }
+
+        public async Task<Result<CategoriaProduto>> ImportarCSV(byte[] file)
+        {
+            
+            var response = new Result<CategoriaProduto>();
+            using(var memory = new MemoryStream(file))
+            using (var reader = new StreamReader(memory, Encoding.GetEncoding("iso-8859-1")))               
+            using(var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+                csv.Configuration.Delimiter = ";";
+                csv.Configuration.MissingFieldFound = null;
+
+                var entities = csv.GetRecords<PropImportacao>();
+
+                int index = 1;
+                foreach(var item in entities)
+                {
+                    var result = await _importarCategoriaProdutoValidator.Importar(item.Cnpj, item.Nome);
+                    if (result.IsValid)
+                    {
+                        await _categoriaProdutoRepository.CreateAsync(result.Entity);
+                    }
+                    else
+                    {
+                        response.ErrorList.Add($"Item: {index}");
+                        response.ErrorList.AddRange(result.ErrorList.ToArray());
+                    }
+                    index++;
+                }
+            }
+            return response;
+        }
+
+        private class PropImportacao
+        {
+            public string Nome { get; set; }
+            public string Cnpj { get; set; }
         }
     }
 }

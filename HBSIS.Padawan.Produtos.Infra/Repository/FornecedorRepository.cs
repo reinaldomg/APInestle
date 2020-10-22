@@ -19,6 +19,15 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository
            
         }
 
+        public async Task<bool> GetByCnpj(string cnpj)
+        {
+            return await DbSet.Where(x => x.Cnpj == cnpj).AnyAsync();
+        }
+
+        public async Task<Fornecedor> GetEntityByCnpj(string cnpj)
+        {
+            return await DbSet.Where(x => x.Cnpj == cnpj).FirstAsync();
+        }
     }
 
 }

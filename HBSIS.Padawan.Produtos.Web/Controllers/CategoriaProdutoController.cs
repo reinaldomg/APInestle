@@ -1,8 +1,11 @@
-﻿using HBSIS.Padawan.Produtos.Application;
+﻿using CsvHelper;
+using HBSIS.Padawan.Produtos.Application;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Services;
 using HBSIS.Padawan.Produtos.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -81,6 +84,26 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
             catch
             {
                 return BadRequest("Um erro aconteceu ao exportar o arquivo");
+            }
+        }
+
+        [HttpPost]
+        [Route("Importar")]
+        public async Task<IActionResult> ImportAsync(IFormFile file)
+        {
+            try
+            {
+                using (var memory = new MemoryStream())
+                {
+                    await file.CopyToAsync(memory);
+                    var result = await _csvService.ImportarCSV(memory.ToArray());
+                
+                    return Ok(result.ErrorList);
+                }
+             }
+            catch
+            {
+                return BadRequest("Não foi possível importar o arquivo selecionado");
             }
         }
 
