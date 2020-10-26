@@ -8,6 +8,6 @@ namespace HBSIS.Padawan.Produtos.Domain.Interfaces
 {
     public interface ICategoriaProdutoRepository : IGenericRepository<CategoriaProduto>
     {
-        Task<bool> GetByName(string name);
+        Task<bool> ExistsByNameAsync(string name);
     }
 }

@@ -15,12 +15,22 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IImportarCategoriaProdutoValidator _importarCategoriaProdutoValidator;
+        private const string CNPJ_VALIDO = "10029717532343";
+        private const string CNPJ_INVALIDO = "10029717532344";
+        private const string NOME_INVALIDO = "Banana";
+        private const string NOME_VALIDO = "Bateria";
 
         public ImportarCategoriaProdutoValidatorTest()
         {
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
             _importarCategoriaProdutoValidator = new ImportarCategoriaProdutoValidator(_fornecedorRepository,_categoriaProdutoRepository);
+
+            _categoriaProdutoRepository.ExistsByNameAsync(NOME_INVALIDO).Returns(true);
+            _fornecedorRepository.ExistsByCnpjAsync(CNPJ_VALIDO).Returns(true);
+
+            var fornecedor = GerarFornecedorValido();
+            _fornecedorRepository.GetEntityByCnpjAsync(CNPJ_VALIDO).Returns(fornecedor);
         }
 
         public static Fornecedor GerarFornecedorValido()
@@ -37,67 +47,35 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         }
 
         [Theory]
-        [InlineData("10029717532343", true)]
         [InlineData("", false)]
-        [InlineData("124125235235235",false)]
-        public async void Validar_CNPJ_Valido(string cnpj, bool validar)
+        [InlineData(CNPJ_INVALIDO,false)]
+        public async void Validar_CNPJ_Invalido(string cnpj, bool validar)
         {
-            var fornecedor = GerarFornecedorValido();
-
-            string nome = "Baleia";
-
-            _fornecedorRepository.GetByCnpj("10029717532343").Returns(true);
-            _fornecedorRepository.GetEntityByCnpj("10029717532343").Returns(fornecedor);
-
-            var result = await _importarCategoriaProdutoValidator.Importar(cnpj,nome);
+            var result = await _importarCategoriaProdutoValidator.Validar(cnpj,NOME_VALIDO);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal($"CNPJ não cadastrado: {cnpj}", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal($"CNPJ não cadastrado: {cnpj}", result.ErrorList.SingleOrDefault());
         }
 
         [Theory]
-        [InlineData("Doce",true)]
-        [InlineData("Banana",false)]
-        public async void Validar_Nome_Valido(string nome, bool validar)
-        {
-            var fornecedor = GerarFornecedorValido();
-            string cnpj = "10029717532343";
-
-            _categoriaProdutoRepository.GetByName("Banana").Returns(true);
-            _fornecedorRepository.GetByCnpj("10029717532343").Returns(true);
-            _fornecedorRepository.GetEntityByCnpj("10029717532343").Returns(fornecedor);
-
-            var result = await _importarCategoriaProdutoValidator.Importar(cnpj, nome);
-
-            Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal($"Nome de categoria já cadastrado: {nome}", result.ErrorList.SingleOrDefault());
-            }
-        }
-
-        [Theory]
-        [InlineData("Doce", true)]
-        [InlineData("", false)]
+        [InlineData(NOME_INVALIDO,false)]
         public async void Validar_Nome_Existe(string nome, bool validar)
         {
-            var fornecedor = GerarFornecedorValido();
-            string cnpj = "10029717532343";
-
-            _categoriaProdutoRepository.GetByName("Banana").Returns(true);
-            _fornecedorRepository.GetByCnpj("10029717532343").Returns(true);
-            _fornecedorRepository.GetEntityByCnpj("10029717532343").Returns(fornecedor);
-
-            var result = await _importarCategoriaProdutoValidator.Importar(cnpj, nome);
+            var result = await _importarCategoriaProdutoValidator.Validar(CNPJ_VALIDO, nome);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal($"Nome é inválido: {nome}", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal($"Nome de categoria já cadastrado: {nome}", result.ErrorList.SingleOrDefault());
+        }
+
+        [Theory]
+        [InlineData("", false)]
+
+        public async void Validar_Nome_Invalido(string nome, bool validar)
+        {
+            var result = await _importarCategoriaProdutoValidator.Validar(CNPJ_VALIDO, nome);
+
+            Assert.Equal(validar, result.IsValid);
+            Assert.Equal($"Nome é inválido: {nome}", result.ErrorList.SingleOrDefault());
         }
     }
 }

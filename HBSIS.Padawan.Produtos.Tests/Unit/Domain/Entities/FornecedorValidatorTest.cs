@@ -15,7 +15,12 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IFornecedorValidator _fornecedorValidator;
-
+        private const string NOME_INVALIDO_500 = "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES";
         public FornecedorValidatorTest()
         {
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
@@ -33,7 +38,6 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
                 Endereco = "Rua dos bobos, n 0",
                 Telefone = "4340028922"
             };
-
         }
 
         [Fact]
@@ -47,7 +51,6 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         }
 
         [Theory]
-        [InlineData("10029717532343",true)]
         [InlineData("", false)]
         [InlineData("100297175323435", false)]
         [InlineData("1002971753234", false)]
@@ -62,10 +65,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         }
 
         [Theory]
-        [InlineData("reimg80@gmail.com.br",true)]
-        [InlineData("reimg80@gmail.com.br.br", true)]
         [InlineData("reimg80@gmail", false)]
         [InlineData("reimg80gmail.com.br", false)]
+        [InlineData("reimg90@gmail.com.br.br.br",false)]
         public void Teste_Validar_Email_Invalido(string email, bool validar)
         {
             var fornecedor = GerarFornecedor();
@@ -74,22 +76,12 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = _fornecedorValidator.FornecedorValidate(fornecedor);
 
             Assert.Equal(validar,result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("O Email não é válido", result.ErrorList.SingleOrDefault());
-            }
-
+            Assert.Equal("O Email não é válido", result.ErrorList.SingleOrDefault());
         }
 
         [Theory]
-        [InlineData("Pinoquio",true)]
         [InlineData("", false)]
-        [InlineData("500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES", false)]
+        [InlineData(NOME_INVALIDO_500, false)]
         public void Teste_Validar_Nome_Invalido(string nome, bool validar)
         {
             var fornecedor = GerarFornecedor();
@@ -98,10 +90,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = _fornecedorValidator.FornecedorValidate(fornecedor);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("O Nome Fantasia não é válido", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal("O Nome Fantasia não é válido", result.ErrorList.SingleOrDefault());
         }
 
         [Theory]
@@ -109,7 +98,21 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         [InlineData("4330552345",true)]
         [InlineData("(43)9956-7213",true)]
         [InlineData("(43)99567213",true)]
-        [InlineData("(4)999567213",false)]
+        public void Teste_Validar_Telefone_Valido(string telefone, bool validar)
+        {
+            var fornecedor = GerarFornecedor();
+            fornecedor.Telefone = telefone;
+
+            var result = _fornecedorValidator.FornecedorValidate(fornecedor);
+
+            Assert.Equal(validar, result.IsValid);
+        }
+
+        [Theory]
+        [InlineData("(4)999567213", false)]
+        [InlineData("(4)99956721", false)]
+        [InlineData("(4)9995672133", false)]
+        [InlineData("(42)998956-7213332", false)]
         public void Teste_Validar_Telefone_Invalido(string telefone, bool validar)
         {
             var fornecedor = GerarFornecedor();
@@ -118,20 +121,12 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = _fornecedorValidator.FornecedorValidate(fornecedor);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("O Telefone não é válido", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal("O Telefone não é válido", result.ErrorList.SingleOrDefault());
         }
 
         [Theory]
         [InlineData("",false)]
-        [InlineData("500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES", false)]
+        [InlineData(NOME_INVALIDO_500, false)]
         public void Teste_Validar_Razao_Social(string nome, bool validar)
         {
             var fornecedor = GerarFornecedor();
@@ -140,11 +135,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var result = _fornecedorValidator.FornecedorValidate(fornecedor);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("A Razão Social não é válida", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal("A Razão Social não é válida", result.ErrorList.SingleOrDefault());
         }
-
     }
 }

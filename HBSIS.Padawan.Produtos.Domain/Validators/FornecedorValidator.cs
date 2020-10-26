@@ -1,10 +1,8 @@
 ﻿using HBSIS.Padawan.Produtos.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using HBSIS.Padawan.Produtos.Domain.Result;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Result;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators
 {
@@ -22,39 +20,33 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
             var result = new Result<Fornecedor>(fornecedor);
             if (string.IsNullOrEmpty(fornecedor.Cnpj) || fornecedor.Cnpj.Length > 14 || ValidadorCnpj(fornecedor.Cnpj))
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O CNPJ não é válido");
             }
-            if (_fornecedorRepository.GetByCnpj(fornecedor.Cnpj).Result)
+            if (_fornecedorRepository.ExistsByCnpjAsync(fornecedor.Cnpj).Result)
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O CNPJ já está cadastrado");
             }
             if (string.IsNullOrEmpty(fornecedor.Endereco) || fornecedor.Endereco.Length > 500)
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O Endereço não é válido");
             }
             if (string.IsNullOrEmpty(fornecedor.NomeFantasia) || fornecedor.NomeFantasia.Length > 500)
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O Nome Fantasia não é válido");
             }
             if (string.IsNullOrEmpty(fornecedor.RazaoSocial) || fornecedor.RazaoSocial.Length > 500)
             {
-                result.IsValid = false;
                 result.ErrorList.Add("A Razão Social não é válida");
             }
             if (string.IsNullOrEmpty(fornecedor.Email) || fornecedor.Email.Length > 100 || ValidadorEmail(fornecedor.Email))
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O Email não é válido");
             }
             if (string.IsNullOrEmpty(fornecedor.Telefone) || fornecedor.Telefone.Length > 100 || ValidadorTelefone(fornecedor.Telefone))
             {
-                result.IsValid = false;
                 result.ErrorList.Add("O Telefone não é válido");
             }
+            result.IsValid = !result.ErrorList.Any();
             return result;
         }
 

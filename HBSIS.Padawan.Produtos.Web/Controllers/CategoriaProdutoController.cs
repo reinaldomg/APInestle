@@ -92,15 +92,10 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         public async Task<IActionResult> ImportAsync(IFormFile file)
         {
             try
-            {
-                using (var memory = new MemoryStream())
-                {
-                    await file.CopyToAsync(memory);
-                    var result = await _csvService.ImportarCSV(memory.ToArray());
-                
-                    return Ok(result.ErrorList);
-                }
-             }
+            { 
+                var result = await _csvService.ImportarCSV(file);
+                return Ok(result.ErrorList);
+            }
             catch
             {
                 return BadRequest("Não foi possível importar o arquivo selecionado");

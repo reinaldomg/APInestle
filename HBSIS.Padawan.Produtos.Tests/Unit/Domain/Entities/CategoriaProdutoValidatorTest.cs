@@ -15,47 +15,64 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly ICategoriaProdutoValidator _categoriaProdutoValidator;
+        private const string ID_VALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc3";
+        private const string ID_INVALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63cd3";
+        private const string NOME_INVALIDO_500 = "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
+            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES";
+        private const string NOME_CADASTRADO = "Bateria";
 
         public CategoriaProdutoValidatorTest()
         {
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
             _categoriaProdutoValidator = new CategoriaProdutoValidator(_fornecedorRepository, _categoriaProdutoRepository);
+
+            _fornecedorRepository.ExistsByIdAsync(Guid.Parse(ID_VALIDO)).Returns(true);
+            _categoriaProdutoRepository.ExistsByNameAsync(NOME_CADASTRADO).Returns(true);
+
         }
 
         [Theory]
-        [InlineData("Pamonha", true)]
         [InlineData("", false)]
-        [InlineData("500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
-            "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES", false)]
-        public async void Teste_Validar_Nome(string nome, bool validar)
+        [InlineData(NOME_INVALIDO_500, false)]
+        public async void Teste_Nome_Invalido(string nome, bool validar)
         {
             var categoriaproduto = new CategoriaProduto()
             {
                 Nome = nome,
-                FornecedorId = new Guid("71cb18ba-7e4f-4f29-144e-08d86ae63dc3")
+                FornecedorId = new Guid(ID_VALIDO)
             };
-
-            _categoriaProdutoRepository.GetByName(Arg.Any<string>()).Returns(false);
-            _fornecedorRepository.ExistsByIdAsync(Arg.Any<Guid>()).Returns(true);
 
             var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
 
             Assert.Equal(validar,result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("Nome é inválido", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal("Nome é inválido", result.ErrorList.SingleOrDefault());
         }
 
         [Theory]
-        [InlineData("",false)]
-        [InlineData("71cb18ba-7e4f-4f29-144e-08d86ae63dc3", true)]
-        public async void Teste_Validar_ID_Fornecedor(string id, bool validar)
+        [InlineData(NOME_CADASTRADO, false)]
+        public async void Teste_Nome_Cadastrado(string nome, bool validar)
+        {
+            var categoriaproduto = new CategoriaProduto()
+            {
+                Nome = nome,
+                FornecedorId = new Guid(ID_VALIDO)
+            };
+
+            var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
+
+            Assert.Equal(validar, result.IsValid);
+            Assert.Equal("Categoria já cadastrada", result.ErrorList.SingleOrDefault());
+        }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(ID_INVALIDO, false)]
+        public async void Teste_ID_Fornecedor_Invalido(string id, bool validar)
         {
             Guid Id = new Guid();
             bool parse = Guid.TryParse(id, out Id);
@@ -78,14 +95,10 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
                 };
             }
 
-            _fornecedorRepository.ExistsByIdAsync(Arg.Any<Guid>()).Returns(true);
             var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
 
             Assert.Equal(validar, result.IsValid);
-            if (!validar)
-            {
-                Assert.Equal("Id de referência a Fornecedor é inválido", result.ErrorList.SingleOrDefault());
-            }
+            Assert.Equal("Id de referência a Fornecedor é inválido", result.ErrorList.SingleOrDefault());
         }
 
 
@@ -96,10 +109,8 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             var categoriaproduto = new CategoriaProduto()
             {
                 Nome = "Cerveja",
-                FornecedorId = new Guid("71cb18ba-7e4f-4f29-144e-08d86ae63dc3")
+                FornecedorId = new Guid(ID_VALIDO)
             };
-
-            _fornecedorRepository.ExistsByIdAsync(Arg.Any<Guid>()).Returns(true);
 
             var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
 

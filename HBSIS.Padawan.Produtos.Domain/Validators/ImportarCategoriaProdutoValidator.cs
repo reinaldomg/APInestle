@@ -1,9 +1,7 @@
 ﻿using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Result;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators
@@ -19,34 +17,24 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
             _categoriaProdutoRepository = categoriaProdutoRepository;
         }
 
-        public async Task<Result<CategoriaProduto>> Importar(string cnpj, string nome)
+        public async Task<Result<CategoriaProduto>> Validar(string cnpj, string nome)
         {
             var result = new Result<CategoriaProduto>();
 
-            if (!await _fornecedorRepository.GetByCnpj(cnpj))
+            if (!await _fornecedorRepository.ExistsByCnpjAsync(cnpj))
             {
-                result.IsValid = false;
                 result.ErrorList.Add($"CNPJ não cadastrado: {cnpj}");
             }
-            if (await _categoriaProdutoRepository.GetByName(nome))
+            if (await _categoriaProdutoRepository.ExistsByNameAsync(nome))
             {
-                result.IsValid = false;
                 result.ErrorList.Add($"Nome de categoria já cadastrado: {nome}");
             }
             if (nome.Length > 500 || nome == string.Empty)
             {
-                result.IsValid = false;
                 result.ErrorList.Add($"Nome é inválido: {nome}");
             }
-            if (result.IsValid)
-            {
-                var fornecedor = await _fornecedorRepository.GetEntityByCnpj(cnpj);
-                result.Entity = new CategoriaProduto()
-                {
-                    Nome = nome,
-                    FornecedorId = fornecedor.Id
-                };
-            }
+            result.IsValid = !result.ErrorList.Any();
+       
             return result;
         }
     }
