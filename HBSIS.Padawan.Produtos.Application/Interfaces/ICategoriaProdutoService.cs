@@ -13,6 +13,5 @@ namespace HBSIS.Padawan.Produtos.Application.Interfaces
         public Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto);
         public Task<Result<CategoriaProduto>> DeleteAsync(Guid id);
         public Task<IEnumerable<CategoriaProduto>> GetAsync();
-
     }
 }

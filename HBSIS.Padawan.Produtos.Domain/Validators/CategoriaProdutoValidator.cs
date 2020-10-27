@@ -2,8 +2,7 @@
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators
@@ -58,15 +57,17 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
 
             if (categoriaProduto.Nome.Length > 500 || categoriaProduto.Nome == string.Empty)
             {
-                result.IsValid = false;
                 result.ErrorList.Add("Nome é inválido");
             }
-            if (categoriaProduto.FornecedorId == null || !(await ExisteFornecedor(categoriaProduto.FornecedorId)))
+            if(await _categoriaProdutoRepository.ExistsByNameAsync(categoriaProduto.Nome))
             {
-                result.IsValid = false;
+                result.ErrorList.Add("Categoria já cadastrada");
+            }
+            if (categoriaProduto.FornecedorId == Guid.Empty|| !(await ExisteFornecedor(categoriaProduto.FornecedorId)))
+            {
                 result.ErrorList.Add("Id de referência a Fornecedor é inválido");
             }
-
+            result.IsValid = !result.ErrorList.Any();
             return result;
         }
 

@@ -13,12 +13,15 @@ namespace HBSIS.Padawan.Produtos.Application
         {
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IFornecedorService, FornecedorService>();
+            services.AddScoped<IFornecedorValidator, FornecedorValidator>();
 
             services.AddScoped<ICategoriaProdutoRepository, CategoriaProdutoRepository>();
             services.AddScoped<ICategoriaProdutoService, CategoriaProdutoService>();
             services.AddScoped<ICategoriaProdutoValidator, CategoriaProdutoValidator>();
 
             services.AddScoped<ICSVService, CSVService>();
+
+            services.AddScoped<IImportarCategoriaProdutoValidator, ImportarCategoriaProdutoValidator>();
         }
     }
 }
