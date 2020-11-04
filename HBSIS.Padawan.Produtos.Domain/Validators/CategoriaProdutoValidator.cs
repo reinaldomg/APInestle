@@ -21,15 +21,12 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators
 
         public async Task<Result<CategoriaProduto>> CreateValidate(CategoriaProduto categoriaProduto)
         {
-            var result = new Result<CategoriaProduto>();
-            result = await ValidarCamposObrigatorios(categoriaProduto); 
-            return result;
+            return await ValidarCamposObrigatorios(categoriaProduto); 
         }
 
         public async Task<Result<CategoriaProduto>> IdValidate(Guid Id)
         {
-            var result = await ExisteCategoria(Id); 
-            return result;
+            return await ExisteCategoria(Id); 
         }
 
         public async Task<Result<CategoriaProduto>> UpdateValidate(CategoriaProduto categoriaProduto)

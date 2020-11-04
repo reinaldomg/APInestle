@@ -82,8 +82,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services
                     }
                     return response;
                 }
-            }
-            
+            }   
         }
 
         private class PropImportacao

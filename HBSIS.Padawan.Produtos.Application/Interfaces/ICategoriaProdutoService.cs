@@ -9,9 +9,9 @@ namespace HBSIS.Padawan.Produtos.Application.Interfaces
 {
     public interface ICategoriaProdutoService
     {
-        public Task<Result<CategoriaProduto>> CreateAsync(CategoriaProduto categoriaProduto);
-        public Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto);
-        public Task<Result<CategoriaProduto>> DeleteAsync(Guid id);
-        public Task<IEnumerable<CategoriaProduto>> GetAsync();
+        Task<Result<CategoriaProduto>> CreateAsync(CategoriaProduto categoriaProduto);
+        Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto);
+        Task<Result<CategoriaProduto>> DeleteAsync(Guid id);
+        Task<IEnumerable<CategoriaProduto>> GetAsync();
     }
 }

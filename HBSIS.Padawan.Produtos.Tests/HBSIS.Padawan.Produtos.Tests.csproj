@@ -17,10 +17,10 @@
 
     <ItemGroup>
       <Folder Include="Builders" />
-      <Folder Include="Unit\Application\Services" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\HBSIS.Padawan.Produtos.Application\HBSIS.Padawan.Produtos.Application.csproj" />
       <ProjectReference Include="..\HBSIS.Padawan.Produtos.Domain\HBSIS.Padawan.Produtos.Domain.csproj" />
     </ItemGroup>
 

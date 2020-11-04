@@ -9,8 +9,8 @@ namespace HBSIS.Padawan.Produtos.Domain.Interfaces
 {
     public interface ICategoriaProdutoValidator
     {
-        public Task<Result<CategoriaProduto>> CreateValidate(CategoriaProduto categoriaProduto);
-        public Task<Result<CategoriaProduto>> IdValidate(Guid Id);
-        public Task<Result<CategoriaProduto>> UpdateValidate(CategoriaProduto categoriaProduto);
+        Task<Result<CategoriaProduto>> CreateValidate(CategoriaProduto categoriaProduto);
+        Task<Result<CategoriaProduto>> IdValidate(Guid Id);
+        Task<Result<CategoriaProduto>> UpdateValidate(CategoriaProduto categoriaProduto);
     }
 }

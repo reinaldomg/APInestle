@@ -7,7 +7,7 @@ namespace HBSIS.Padawan.Produtos.Application.Interfaces
 {
     public interface ICSVService
     {
-        public Task<byte[]> ExportarCSV();
-        public Task<Result<CategoriaProduto>> ImportarCSV(IFormFile file);
+        Task<byte[]> ExportarCSV();
+        Task<Result<CategoriaProduto>> ImportarCSV(IFormFile file);
     }
 }

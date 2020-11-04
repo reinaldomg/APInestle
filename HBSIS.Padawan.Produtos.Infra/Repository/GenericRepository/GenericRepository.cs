@@ -31,10 +31,13 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository.GenericRepository
         public async Task<bool> ExistsByIdAsync(Guid Id)
         {
             var entity = await DbSet.FindAsync(Id);
-            _dbContext.Entry(entity).State = EntityState.Detached;
-            if (entity != null)
+            
+            if (entity != null) 
+            {
+                _dbContext.Entry(entity).State = EntityState.Detached;
                 return true;
-            return false;           
+            }
+            return false;
         }
 
         public async Task CreateAsync(TEntity entity)

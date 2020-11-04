@@ -10,6 +10,6 @@ namespace HBSIS.Padawan.Produtos.Application.Interfaces
 {
     public interface IFornecedorService 
     {
-        public Task<Result<Fornecedor>> CreateFornecedorAsync(Fornecedor fornecedor);
+        Task<Result<Fornecedor>> CreateFornecedorAsync(Fornecedor fornecedor);
     }
 }
