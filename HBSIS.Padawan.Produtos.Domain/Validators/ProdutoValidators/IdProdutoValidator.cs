@@ -16,6 +16,11 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
         {
             _produtoRepository = produtoRepository;
 
+            ValidarId();
+        }
+
+        private void ValidarId()
+        {
             RuleFor(x => x).MustAsync(async (id, _) =>
             {
                 return await _produtoRepository.ExistsByIdAsync(id);

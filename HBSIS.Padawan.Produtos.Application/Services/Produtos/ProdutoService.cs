@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBSIS.Padawan.Produtos.Application.Services
+namespace HBSIS.Padawan.Produtos.Application.Services.Produtos
 {
     public class ProdutoService : IProdutoService
     {

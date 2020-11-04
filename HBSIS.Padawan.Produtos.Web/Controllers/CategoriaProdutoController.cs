@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using HBSIS.Padawan.Produtos.Application;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Application.Services;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +20,9 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
     public class CategoriaProdutoController : ControllerBase
     {
         private readonly ICategoriaProdutoService _categoriaProdutoService;
-        private readonly ICSVService _csvService;
+        private readonly ICategoriaProdutoCSVService _csvService;
 
-        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICSVService csvService)
+        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICategoriaProdutoCSVService csvService)
         {
             _categoriaProdutoService = fornecedorService;
             _csvService = csvService;

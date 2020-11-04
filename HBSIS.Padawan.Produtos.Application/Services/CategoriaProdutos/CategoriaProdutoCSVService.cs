@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Result;
@@ -9,15 +10,15 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBSIS.Padawan.Produtos.Application.Services
+namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
 {
-    public class CSVService : ICSVService
+    public class CategoriaProdutoCSVService : ICategoriaProdutoCSVService
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IImportarCategoriaProdutoValidator _importarCategoriaProdutoValidator;
         private readonly IFornecedorRepository _fornecedorRepository;
 
-        public CSVService(ICategoriaProdutoRepository categoriaProdutoRepository, IImportarCategoriaProdutoValidator importarCategoriaProdutoValidator, IFornecedorRepository fornecedorRepository)
+        public CategoriaProdutoCSVService(ICategoriaProdutoRepository categoriaProdutoRepository, IImportarCategoriaProdutoValidator importarCategoriaProdutoValidator, IFornecedorRepository fornecedorRepository)
         {
             _categoriaProdutoRepository = categoriaProdutoRepository;
             _importarCategoriaProdutoValidator = importarCategoriaProdutoValidator;
@@ -63,7 +64,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services
                     csv.Configuration.Delimiter = ";";
                     csv.Configuration.MissingFieldFound = null;
 
-                    var entities = csv.GetRecords<PropImportacao>();
+                    var entities = csv.GetRecords<CategoriaProdutoPropImportacao>();
 
                     var index = 1;
                     foreach (var item in entities)
@@ -85,13 +86,13 @@ namespace HBSIS.Padawan.Produtos.Application.Services
             }   
         }
 
-        private class PropImportacao
+        private class CategoriaProdutoPropImportacao
         {
             public string Nome { get; set; }
             public string Cnpj { get; set; }
         }
 
-        private async void CriarCategoriaProduto(PropImportacao item)
+        private async void CriarCategoriaProduto(CategoriaProdutoPropImportacao item)
         {
             var fornecedor = await _fornecedorRepository.GetEntityByCnpjAsync(item.Cnpj);
             var categoriaproduto = new CategoriaProduto()

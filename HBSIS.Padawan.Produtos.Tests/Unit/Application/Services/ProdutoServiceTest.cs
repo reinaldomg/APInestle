@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
 using HBSIS.Padawan.Produtos.Application.Services;
+using HBSIS.Padawan.Produtos.Application.Services.Produtos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
