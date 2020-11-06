@@ -33,7 +33,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
             if (result.IsValid)
                 return Ok("ok");
             else
-                return BadRequest(result.ErrorList);            
+                return BadRequest(result.Errors.Select(x => x.ErrorMessage));            
         }
 
     }

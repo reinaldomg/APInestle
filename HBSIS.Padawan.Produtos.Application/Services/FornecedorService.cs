@@ -1,6 +1,8 @@
-﻿using HBSIS.Padawan.Produtos.Application.Interfaces;
+﻿using FluentValidation.Results;
+using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.FornecedorValidators;
 using HBSIS.Padawan.Produtos.Domain.Result;
 using HBSIS.Padawan.Produtos.Domain.Validators;
 using System.Threading.Tasks;
@@ -10,17 +12,17 @@ namespace HBSIS.Padawan.Produtos.Application.Services
     public class FornecedorService : IFornecedorService
     {
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly IFornecedorValidator _fornecedorValidator;
+        private readonly ICamposFornecedorValidator _camposFornecedorValidator;
 
-        public FornecedorService(IFornecedorRepository fornecedorRepository, IFornecedorValidator fornecedorValidator)
+        public FornecedorService(IFornecedorRepository fornecedorRepository, ICamposFornecedorValidator camposFornecedorValidator)
         {
             _fornecedorRepository = fornecedorRepository;
-            _fornecedorValidator = fornecedorValidator;
+            _camposFornecedorValidator = camposFornecedorValidator;
         }
 
-        public async Task<Result<Fornecedor>> CreateFornecedorAsync(Fornecedor fornecedor) 
+        public async Task<ValidationResult> CreateFornecedorAsync(Fornecedor fornecedor) 
         {
-            var result = _fornecedorValidator.FornecedorValidate(fornecedor);
+            var result = await _camposFornecedorValidator.ValidateAsync(fornecedor);
 
             if (result.IsValid)
                 await _fornecedorRepository.CreateAsync(fornecedor);

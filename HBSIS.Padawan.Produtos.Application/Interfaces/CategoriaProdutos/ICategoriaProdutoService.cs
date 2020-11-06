@@ -1,4 +1,5 @@
-﻿using HBSIS.Padawan.Produtos.Domain.Entities;
+﻿using FluentValidation.Results;
+using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ namespace HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos
 {
     public interface ICategoriaProdutoService
     {
-        Task<Result<CategoriaProduto>> CreateAsync(CategoriaProduto categoriaProduto);
-        Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto);
-        Task<Result<CategoriaProduto>> DeleteAsync(Guid id);
+        Task<ValidationResult> CreateAsync(CategoriaProduto categoriaProduto);
+        Task<ValidationResult> UpdateAsync(CategoriaProduto categoriaProduto);
+        Task<ValidationResult> DeleteAsync(Guid id);
         Task<IEnumerable<CategoriaProduto>> GetAsync();
     }
 }

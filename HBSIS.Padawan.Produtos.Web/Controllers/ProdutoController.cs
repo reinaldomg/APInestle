@@ -15,12 +15,12 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoService _produtoService;
-        private readonly IProdutoCSVService _produtoCSVService;
+        private readonly IProdutosExportarCSVService _produtosExportarCSVService;
 
-        public ProdutoController(IProdutoService produtoService, IProdutoCSVService produtoCSVService)
+        public ProdutoController(IProdutoService produtoService, IProdutosExportarCSVService produtosExportarCSVService)
         {
             _produtoService = produtoService;
-            _produtoCSVService = produtoCSVService;
+            _produtosExportarCSVService = produtosExportarCSVService;
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         {
             try
             {
-                var result = await _produtoCSVService.ExportarCSV();
+                var result = await _produtosExportarCSVService.ExportarCSV();
                 var memory = new MemoryStream(result);
                 return new FileStreamResult(memory, "application/csv") { FileDownloadName = "Produto.csv" };
             }

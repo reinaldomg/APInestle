@@ -1,7 +1,9 @@
-﻿using HBSIS.Padawan.Produtos.Application.Interfaces;
+﻿using FluentValidation.Results;
+using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
 using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
 using System.Collections.Generic;
@@ -13,17 +15,21 @@ namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
     public class CategoriaProdutoService : ICategoriaProdutoService
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
-        private readonly ICategoriaProdutoValidator _categoriaProdutoValidator;
+        private readonly ICamposCategoriaProdutoValidator _camposCategoriaProdutoValidator;
+        private readonly IIdCategoriaProdutoValidator _idCategoriaProdutoValidator;
+        private readonly IUpdateCategoriaProdutoValidator _updateCategoriaProdutoValidator;
 
-        public CategoriaProdutoService(ICategoriaProdutoRepository categoriaProdutoRepository, ICategoriaProdutoValidator categoriaProdutoValidator)
+        public CategoriaProdutoService(ICategoriaProdutoRepository categoriaProdutoRepository, ICamposCategoriaProdutoValidator categoriaProdutoValidator, IIdCategoriaProdutoValidator idCategoriaProdutoValidator, IUpdateCategoriaProdutoValidator updateCategoriaProdutoValidator)
         {
             _categoriaProdutoRepository = categoriaProdutoRepository;
-            _categoriaProdutoValidator = categoriaProdutoValidator;
+            _camposCategoriaProdutoValidator = categoriaProdutoValidator;
+            _idCategoriaProdutoValidator = idCategoriaProdutoValidator;
+            _updateCategoriaProdutoValidator = updateCategoriaProdutoValidator;
         }
 
-        public async Task<Result<CategoriaProduto>> CreateAsync(CategoriaProduto categoriaProduto)
+        public async Task<ValidationResult> CreateAsync(CategoriaProduto categoriaProduto)
         {
-            var result = await _categoriaProdutoValidator.CreateValidate(categoriaProduto);
+            var result = await _camposCategoriaProdutoValidator.ValidateAsync(categoriaProduto);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.CreateAsync(categoriaProduto);
@@ -31,9 +37,9 @@ namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
             return result;
         }
 
-        public async Task<Result<CategoriaProduto>> DeleteAsync(Guid Id)
+        public async Task<ValidationResult> DeleteAsync(Guid Id)
         {
-            var result = await _categoriaProdutoValidator.IdValidate(Id);
+            var result = await _idCategoriaProdutoValidator.ValidateAsync(Id);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.DeleteAsync(Id);
@@ -46,15 +52,14 @@ namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
             return await _categoriaProdutoRepository.GetAllAsync();
         }
 
-        public async Task<Result<CategoriaProduto>> UpdateAsync(CategoriaProduto categoriaProduto)
+        public async Task<ValidationResult> UpdateAsync(CategoriaProduto categoriaProduto)
         {
-            var result = await _categoriaProdutoValidator.UpdateValidate(categoriaProduto);
+            var result = await _updateCategoriaProdutoValidator.ValidateAsync(categoriaProduto);
 
             if (result.IsValid)
                 await _categoriaProdutoRepository.UpdateAsync(categoriaProduto);
 
             return result;
-
         }
     }
 }
