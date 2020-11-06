@@ -40,7 +40,6 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
 
             _fornecedorRepository.ExistsByIdAsync(Guid.Parse(ID_VALIDO)).Returns(true);
             _categoriaProdutoRepository.ExistsByNameAsync(NOME_CADASTRADO).Returns(true);
-
         }
 
         [Theory]

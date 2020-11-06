@@ -32,19 +32,6 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             _fornecedorRepository.ExistsByCnpjAsync(CNPJ_CADASTRADO).Returns(true);
         }
 
-        private static Fornecedor GerarFornecedor()
-        {
-            return new Fornecedor()
-            {
-                NomeFantasia = "Domingo Legal",
-                Cnpj = "10029717532343",
-                Email = "guguliberato@gugu.com.br",
-                RazaoSocial = "Domingo Triste",
-                Endereco = "Rua dos bobos, n 0",
-                Telefone = "4340028922"
-            };
-        }
-
         [Fact]
         [Trait("Deve funcionar OK", "(Fornecedor)")]
         public void Deve_Cadastrar_Corretamente_Fornecedor_Ao_Passar_Dados_Corretamente()
@@ -146,6 +133,19 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
 
             Assert.False(result.IsValid);
             Assert.Equal(mensagem, result.Errors.ElementAt(0).ErrorMessage);
+        }
+
+        private static Fornecedor GerarFornecedor()
+        {
+            return new Fornecedor()
+            {
+                NomeFantasia = "Domingo Legal",
+                Cnpj = "10029717532343",
+                Email = "guguliberato@gugu.com.br",
+                RazaoSocial = "Domingo Triste",
+                Endereco = "Rua dos bobos, n 0",
+                Telefone = "4340028922"
+            };
         }
     }
 }
