@@ -1,10 +1,7 @@
 ﻿using FluentValidation;
-using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
 {
@@ -16,6 +13,11 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
         {
             _produtoRepository = produtoRepository;
 
+            ValidarId();
+        }
+
+        private void ValidarId()
+        {
             RuleFor(x => x).MustAsync(async (id, _) =>
             {
                 return await _produtoRepository.ExistsByIdAsync(id);

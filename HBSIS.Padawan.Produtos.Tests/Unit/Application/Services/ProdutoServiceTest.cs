@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
 using HBSIS.Padawan.Produtos.Application.Services;
+using HBSIS.Padawan.Produtos.Application.Services.Produtos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
@@ -17,9 +19,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Application.Services
         private readonly IProdutoRepository _produtoRepository;
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IProdutoService _produtoService;
-        private readonly ICamposProdutoValidator _camposProdutoValidator;
+        private readonly ICriarProdutoValidator _camposProdutoValidator;
         private readonly IIdProdutoValidator _idProdutoValidator;
-        private readonly IUpdateProdutoValidator _updateProdutoValidator;
+        private readonly IAtualizarProdutoValidator _updateProdutoValidator;
         private const string ID_PRODUTO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc5";
         private const string ID_VALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc3";
         private const string ID_INVALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc1";

@@ -2,13 +2,10 @@
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
 {
-    public class UpdateProdutoValidator : AbstractValidator<Produto>, IUpdateProdutoValidator
+    public class UpdateProdutoValidator : AbstractValidator<Produto>, IAtualizarProdutoValidator
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IProdutoRepository _produtoRepository;

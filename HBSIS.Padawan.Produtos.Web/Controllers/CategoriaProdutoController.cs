@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using HBSIS.Padawan.Produtos.Application;
 using HBSIS.Padawan.Produtos.Application.Interfaces;
+using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Application.Services;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +20,14 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
     public class CategoriaProdutoController : ControllerBase
     {
         private readonly ICategoriaProdutoService _categoriaProdutoService;
-        private readonly ICSVService _csvService;
+        private readonly ICategoriaProdutoExportarCSVService _categoriaProdutoExportarCSVService;
+        private readonly ICategoriaProdutoImportarCSVService _categoriaProdutoImportarCSVService;
 
-        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICSVService csvService)
+        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICategoriaProdutoExportarCSVService categoriaProdutoExportarCSVService, ICategoriaProdutoImportarCSVService categoriaProdutoImportarCSVService)
         {
             _categoriaProdutoService = fornecedorService;
-            _csvService = csvService;
+            _categoriaProdutoExportarCSVService = categoriaProdutoExportarCSVService;
+            _categoriaProdutoImportarCSVService = categoriaProdutoImportarCSVService;
         }
 
         [HttpPost]
@@ -36,7 +39,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
             if (result.IsValid)
                 return Ok("ok");
             else
-                return BadRequest(result.ErrorList);
+                return BadRequest(result.Errors.Select(x => x.ErrorMessage));
         }
 
         [HttpPut]
@@ -48,7 +51,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
             if (result.IsValid)
                 return Ok("ok");
             else
-                return BadRequest(result.ErrorList);
+                return BadRequest(result.Errors.Select(x => x.ErrorMessage));
         }
 
         [HttpDelete]
@@ -60,7 +63,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
             if (result.IsValid)
                 return Ok("ok");
             else
-                return BadRequest(result.ErrorList);
+                return BadRequest(result.Errors.Select(x => x.ErrorMessage));
         }
 
         [HttpGet]
@@ -77,7 +80,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         {
             try
             {
-                var result = await _csvService.ExportarCSV();
+                var result = await _categoriaProdutoExportarCSVService.ExportarCSV();
                 var memory = new MemoryStream(result);
                 return new FileStreamResult(memory, "application/csv") { FileDownloadName = "CategoriaProduto.csv" };
             }
@@ -92,13 +95,13 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         public async Task<IActionResult> ImportAsync(IFormFile file)
         {
             try
-            { 
-                var result = await _csvService.ImportarCSV(file);
-                return Ok(result.ErrorList);
-            }
-            catch
             {
-                return BadRequest("Não foi possível importar o arquivo selecionado");
+                var result = await _categoriaProdutoImportarCSVService.ImportarCSV(file);
+                return Ok(result.ToList());
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

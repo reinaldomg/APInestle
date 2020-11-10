@@ -1,6 +1,9 @@
 ﻿using HBSIS.Padawan.Produtos.Domain.Entities;
+using HBSIS.Padawan.Produtos.Domain.Entities.Importar;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
 using HBSIS.Padawan.Produtos.Domain.Validators;
+using HBSIS.Padawan.Produtos.Domain.Validators.CategoriaProdutoValidators;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
@@ -33,7 +36,32 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             _fornecedorRepository.GetEntityByCnpjAsync(CNPJ_VALIDO).Returns(fornecedor);
         }
 
-        public static Fornecedor GerarFornecedorValido()
+
+        [Theory]
+        [InlineData("", "Campo CNPJ é obrigatório")]
+        [InlineData(CNPJ_INVALIDO, "Fornecedor com esse CNPJ não cadastrado")]
+        public async void Validar_CNPJ_Invalido(string cnpj, string mensagem)
+        {
+            var categoriaproduto = GerarCategoriaProdutoImportar(cnpj, NOME_VALIDO);
+            var result = await _importarCategoriaProdutoValidator.ValidateAsync(categoriaproduto);
+
+            Assert.False(result.IsValid);
+            Assert.Equal(mensagem, result.Errors.ElementAt(0).ErrorMessage);
+        }
+
+        [Theory]
+        [InlineData(NOME_INVALIDO, "Nome de CategoriaProduto já cadastrado")]
+        [InlineData("", "Campo Nome é obrigatório")]
+        public async void Validar_Nome_Existe(string nome, string mensagem)
+        {
+            var categoriaproduto = GerarCategoriaProdutoImportar(CNPJ_VALIDO, nome);
+            var result = await _importarCategoriaProdutoValidator.ValidateAsync(categoriaproduto);
+
+            Assert.False(result.IsValid);
+            Assert.Equal(mensagem, result.Errors.ElementAt(0).ErrorMessage);
+        }
+
+        private static Fornecedor GerarFornecedorValido()
         {
             return new Fornecedor()
             {
@@ -46,36 +74,13 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             };
         }
 
-        [Theory]
-        [InlineData("", false)]
-        [InlineData(CNPJ_INVALIDO,false)]
-        public async void Validar_CNPJ_Invalido(string cnpj, bool validar)
+        private static CategoriaProdutoImportar GerarCategoriaProdutoImportar(string cnpj, string nome)
         {
-            var result = await _importarCategoriaProdutoValidator.Validar(cnpj,NOME_VALIDO);
-
-            Assert.Equal(validar, result.IsValid);
-            Assert.Equal($"CNPJ não cadastrado: {cnpj}", result.ErrorList.SingleOrDefault());
-        }
-
-        [Theory]
-        [InlineData(NOME_INVALIDO,false)]
-        public async void Validar_Nome_Existe(string nome, bool validar)
-        {
-            var result = await _importarCategoriaProdutoValidator.Validar(CNPJ_VALIDO, nome);
-
-            Assert.Equal(validar, result.IsValid);
-            Assert.Equal($"Nome de categoria já cadastrado: {nome}", result.ErrorList.SingleOrDefault());
-        }
-
-        [Theory]
-        [InlineData("", false)]
-
-        public async void Validar_Nome_Invalido(string nome, bool validar)
-        {
-            var result = await _importarCategoriaProdutoValidator.Validar(CNPJ_VALIDO, nome);
-
-            Assert.Equal(validar, result.IsValid);
-            Assert.Equal($"Nome é inválido: {nome}", result.ErrorList.SingleOrDefault());
+            return new CategoriaProdutoImportar()
+            {
+                Cnpj = cnpj,
+                Nome = nome
+            };
         }
     }
 }

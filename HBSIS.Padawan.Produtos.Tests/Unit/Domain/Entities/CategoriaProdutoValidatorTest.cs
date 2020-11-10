@@ -1,6 +1,8 @@
 ﻿using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
 using HBSIS.Padawan.Produtos.Domain.Validators;
+using HBSIS.Padawan.Produtos.Domain.Validators.CategoriaProdutoValidators;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly ICategoriaProdutoValidator _categoriaProdutoValidator;
+        private readonly ICriarCategoriaProdutoValidator _camposCategoriaProdutoValidator;
+        private readonly IIdCategoriaProdutoValidator _idCategoriaProdutoValidator;
+        private readonly IAtualizarCategoriaProdutoValidator _updateCategoriaProdutoValidator;
         private const string ID_VALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc3";
         private const string ID_INVALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63cd3";
         private const string NOME_INVALIDO_500 = "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
@@ -29,17 +33,20 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         {
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
-            _categoriaProdutoValidator = new CategoriaProdutoValidator(_fornecedorRepository, _categoriaProdutoRepository);
+
+            _camposCategoriaProdutoValidator = new CriarCategoriaProdutoValidator(_fornecedorRepository, _categoriaProdutoRepository);
+            _idCategoriaProdutoValidator = new IdCategoriaProdutoValidator(_categoriaProdutoRepository);
+            _updateCategoriaProdutoValidator = new AtualizarCategoriaProdutoValidator(_categoriaProdutoRepository, _fornecedorRepository);
 
             _fornecedorRepository.ExistsByIdAsync(Guid.Parse(ID_VALIDO)).Returns(true);
             _categoriaProdutoRepository.ExistsByNameAsync(NOME_CADASTRADO).Returns(true);
-
         }
 
         [Theory]
-        [InlineData("", false)]
-        [InlineData(NOME_INVALIDO_500, false)]
-        public async void Teste_Nome_Invalido(string nome, bool validar)
+        [InlineData("", "Campo Nome obrigatório")]
+        [InlineData(NOME_INVALIDO_500, "Nome excede o tamanho máximo")]
+        [InlineData(NOME_CADASTRADO, "CategoriaProduto já cadastrada")]
+        public async void Deve_Dar_Erro_Ao_Passar_Nome_Invalido(string nome, string mensagem)
         {
             var categoriaproduto = new CategoriaProduto()
             {
@@ -47,32 +54,16 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
                 FornecedorId = new Guid(ID_VALIDO)
             };
 
-            var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
+            var result = await _camposCategoriaProdutoValidator.ValidateAsync(categoriaproduto);
 
-            Assert.Equal(validar,result.IsValid);
-            Assert.Equal("Nome é inválido", result.ErrorList.SingleOrDefault());
+            Assert.False(result.IsValid);
+            Assert.Equal(mensagem, result.Errors.ElementAt(0).ErrorMessage);
         }
 
         [Theory]
-        [InlineData(NOME_CADASTRADO, false)]
-        public async void Teste_Nome_Cadastrado(string nome, bool validar)
-        {
-            var categoriaproduto = new CategoriaProduto()
-            {
-                Nome = nome,
-                FornecedorId = new Guid(ID_VALIDO)
-            };
-
-            var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
-
-            Assert.Equal(validar, result.IsValid);
-            Assert.Equal("Categoria já cadastrada", result.ErrorList.SingleOrDefault());
-        }
-
-        [Theory]
-        [InlineData("", false)]
-        [InlineData(ID_INVALIDO, false)]
-        public async void Teste_ID_Fornecedor_Invalido(string id, bool validar)
+        [InlineData("", "Fornecedor não deve ser nulo")]
+        [InlineData(ID_INVALIDO, "Fornecedor não cadastrado")]
+        public async void Deve_Dar_Erro_Ao_Passar_Id_Fornecedor_Invalido(string id, string mensagem)
         {
             Guid Id = new Guid();
             bool parse = Guid.TryParse(id, out Id);
@@ -95,16 +86,15 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
                 };
             }
 
-            var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
+            var result = await _camposCategoriaProdutoValidator.ValidateAsync(categoriaproduto);
 
-            Assert.Equal(validar, result.IsValid);
-            Assert.Equal("Id de referência a Fornecedor é inválido", result.ErrorList.SingleOrDefault());
+            Assert.False(result.IsValid);
+            Assert.Equal(mensagem, result.Errors.ElementAt(0).ErrorMessage);
         }
 
 
         [Fact]
-        [Trait("Verificar cadastro OK", "(CategoriaProduto)")]
-        public async void Deve_Dar_Certo_Cadastro()
+        public async void Deve_Dar_Certo_Cadastro_Ao_Passar_Valores_Corretos()
         {
             var categoriaproduto = new CategoriaProduto()
             {
@@ -112,7 +102,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
                 FornecedorId = new Guid(ID_VALIDO)
             };
 
-            var result = await _categoriaProdutoValidator.CreateValidate(categoriaproduto);
+            var result = await _camposCategoriaProdutoValidator.ValidateAsync(categoriaproduto);
 
             Assert.True(result.IsValid);
         }

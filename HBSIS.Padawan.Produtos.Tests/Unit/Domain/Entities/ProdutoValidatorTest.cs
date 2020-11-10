@@ -15,10 +15,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
-        private readonly IProdutoValidator _produtoValidator;
-        private readonly ICamposProdutoValidator _produtoValidatorCampos;
+        private readonly ICriarProdutoValidator _produtoValidatorCampos;
         private readonly IIdProdutoValidator _produtoValidatorID;
-        private readonly IUpdateProdutoValidator _produtoValidatorUpdate;
+        private readonly IAtualizarProdutoValidator _produtoValidatorUpdate;
 
         private const string ID_PRODUTO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc5";
         private const string ID_VALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc3";
@@ -34,10 +33,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         {
             _produtoRepository = Substitute.For<IProdutoRepository>();
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
-            _produtoValidator = new ProdutoValidator(_produtoRepository, _categoriaProdutoRepository);
+
             _produtoValidatorCampos = new CamposProdutoValidator(_categoriaProdutoRepository);
             _produtoValidatorID = new IdProdutoValidator(_produtoRepository);
-
             _produtoValidatorUpdate = new UpdateProdutoValidator(_categoriaProdutoRepository, _produtoRepository);
             
             _categoriaProdutoRepository.ExistsByIdAsync(Guid.Parse(ID_VALIDO)).Returns(true);
