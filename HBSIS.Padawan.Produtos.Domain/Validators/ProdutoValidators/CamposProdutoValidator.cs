@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
-using HBSIS.Padawan.Produtos.Domain.Interfaces;
-using HBSIS.Padawan.Produtos.Domain;
-using System;
 using HBSIS.Padawan.Produtos.Domain.Entities;
+using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
 {
-    public class CamposProdutoValidator : AbstractValidator<Produto>, ICamposProdutoValidator
+    public class CamposProdutoValidator : AbstractValidator<Produto>, ICriarProdutoValidator
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
 

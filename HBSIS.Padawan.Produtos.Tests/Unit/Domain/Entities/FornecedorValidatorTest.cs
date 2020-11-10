@@ -16,7 +16,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
     public class FornecedorValidatorTest
     {
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly ICamposFornecedorValidator _camposFornecedorValidator;
+        private readonly ICriarFornecedorValidator _camposFornecedorValidator;
         private const string CNPJ_CADASTRADO = "10029717532345";
         private const string NOME_INVALIDO_500 = "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
             "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +

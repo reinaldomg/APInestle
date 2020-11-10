@@ -1,13 +1,10 @@
 ﻿using FluentValidation.Results;
-using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
-using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Application.Services.Produtos
@@ -15,11 +12,11 @@ namespace HBSIS.Padawan.Produtos.Application.Services.Produtos
     public class ProdutoService : IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
-        private readonly ICamposProdutoValidator _produtoValidatorCampos;
+        private readonly ICriarProdutoValidator _produtoValidatorCampos;
         private readonly IIdProdutoValidator _produtoValidatorID;
-        private readonly IUpdateProdutoValidator _produtoValidatorUpdate;
+        private readonly IAtualizarProdutoValidator _produtoValidatorUpdate;
 
-        public ProdutoService(IProdutoRepository produtoRepository, ICamposProdutoValidator produtoValidatorCampos, IIdProdutoValidator produtoValidatorID, IUpdateProdutoValidator produtoValidatorUpdate)
+        public ProdutoService(IProdutoRepository produtoRepository, ICriarProdutoValidator produtoValidatorCampos, IIdProdutoValidator produtoValidatorID, IAtualizarProdutoValidator produtoValidatorUpdate)
         {
             _produtoRepository = produtoRepository;         
             _produtoValidatorCampos = produtoValidatorCampos;

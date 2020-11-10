@@ -1,27 +1,33 @@
 ﻿using CsvHelper;
+using FluentValidation;
 using FluentValidation.Results;
 using HBSIS.Padawan.Produtos.Application.Interfaces.Generic;
+using HBSIS.Padawan.Produtos.Domain.Entities;
+using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Application.Services.Generic
 {
-    public abstract class ImportarCSVService<T> : IImportarCSVService<T>
+    public abstract class ImportarCSVService<T,I> : IImportarCSVService<T, I> where T : BaseEntity
     {
-        protected T Importar;
-        protected object Novoitem;
-        protected ValidationResult Resultado;
+        protected readonly IValidator<I> _validator;
+        protected readonly IGenericRepository<T> _repository;
+
+        protected ImportarCSVService(IValidator<I> validator, IGenericRepository<T> repository)
+        {
+            _validator = validator;
+            _repository = repository;
+        }
 
         public async Task<List<string>> ImportarCSV(IFormFile file)
         {
-            var r = new List<string>();
+            var mensagens = new List<string>();
             using (var memorystream = new MemoryStream())
             {
                 await file.CopyToAsync(memorystream);
@@ -33,39 +39,28 @@ namespace HBSIS.Padawan.Produtos.Application.Services.Generic
                     csv.Configuration.Delimiter = ";";
                     csv.Configuration.MissingFieldFound = null;
 
-                    var entities = csv.GetRecords<T>();
+                    var listaImportados = csv.GetRecords<I>();
 
                     var index = 1;
-                    foreach (var item in entities)
+                    foreach (var item in listaImportados)
                     {
-                        CriarItemImportado(item);
-                        
-                        if (Resultado.IsValid)
+                        var resultado = _validator.Validate(item);
+
+                        if (resultado.IsValid)
                         {
-                            CriarObjetoFinal(Importar);
+                            CriarObjeto(item);
                         }
                         else
                         {
-                            r.Add($"Item: {index}");
-                            r.AddRange(Resultado.Errors.Select(x => x.ErrorMessage));
+                            mensagens.Add($"Item: {index}");
+                            mensagens.AddRange(resultado.Errors.Select(x => x.ErrorMessage));
                         }
                         index++;
                     }
-                    return r;
+                    return mensagens;
                 }
             }
         }
-
-        public virtual void CriarItemImportado(object obj)
-        {
-        }
-
-        public virtual void ValidarObjeto(T item)
-        {
-        }
-
-        public virtual void CriarObjetoFinal(T item)
-        {
-        }
+        public abstract void CriarObjeto(I item);
     }
 }

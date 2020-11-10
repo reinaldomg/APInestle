@@ -26,14 +26,14 @@ namespace HBSIS.Padawan.Produtos.Application
 
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IFornecedorService, FornecedorService>();
-            services.AddScoped<ICamposFornecedorValidator, CamposFornecedorValidator>();
+            services.AddScoped<ICriarFornecedorValidator, CamposFornecedorValidator>();
 
             services.AddScoped<ICategoriaProdutoRepository, CategoriaProdutoRepository>();
             services.AddScoped<ICategoriaProdutoService, CategoriaProdutoService>();
 
-            services.AddScoped<ICamposCategoriaProdutoValidator, CamposCategoriaProdutoValidator>();
+            services.AddScoped<ICriarCategoriaProdutoValidator, CriarCategoriaProdutoValidator>();
             services.AddScoped<IIdCategoriaProdutoValidator, IdCategoriaProdutoValidator>();
-            services.AddScoped<IUpdateCategoriaProdutoValidator, UpdateCategoriaProdutoValidator>();
+            services.AddScoped<IAtualizarCategoriaProdutoValidator, AtualizarCategoriaProdutoValidator>();
  
             services.AddScoped<IImportarCategoriaProdutoValidator, ImportarCategoriaProdutoValidator>();
             services.AddScoped<ICategoriaProdutoExportarCSVService, CategoriaProdutoExportarCSVService>();
@@ -42,9 +42,9 @@ namespace HBSIS.Padawan.Produtos.Application
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IProdutoService, ProdutoService>();
 
-            services.AddScoped<ICamposProdutoValidator, CamposProdutoValidator>();
+            services.AddScoped<ICriarProdutoValidator, CamposProdutoValidator>();
             services.AddScoped<IIdProdutoValidator, IdProdutoValidator>();
-            services.AddScoped<IUpdateProdutoValidator, UpdateProdutoValidator>();
+            services.AddScoped<IAtualizarProdutoValidator, UpdateProdutoValidator>();
 
             services.AddScoped<IProdutosExportarCSVService, ProdutosExportarCSVService>();
         }

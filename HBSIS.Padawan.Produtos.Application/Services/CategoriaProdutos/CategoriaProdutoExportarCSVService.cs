@@ -2,9 +2,6 @@
 using HBSIS.Padawan.Produtos.Application.Interfaces.Generic;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos

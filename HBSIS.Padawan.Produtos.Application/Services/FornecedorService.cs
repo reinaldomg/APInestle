@@ -3,8 +3,6 @@ using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.FornecedorValidators;
-using HBSIS.Padawan.Produtos.Domain.Result;
-using HBSIS.Padawan.Produtos.Domain.Validators;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Application.Services
@@ -12,9 +10,9 @@ namespace HBSIS.Padawan.Produtos.Application.Services
     public class FornecedorService : IFornecedorService
     {
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly ICamposFornecedorValidator _camposFornecedorValidator;
+        private readonly ICriarFornecedorValidator _camposFornecedorValidator;
 
-        public FornecedorService(IFornecedorRepository fornecedorRepository, ICamposFornecedorValidator camposFornecedorValidator)
+        public FornecedorService(IFornecedorRepository fornecedorRepository, ICriarFornecedorValidator camposFornecedorValidator)
         {
             _fornecedorRepository = fornecedorRepository;
             _camposFornecedorValidator = camposFornecedorValidator;

@@ -2,9 +2,6 @@
 using HBSIS.Padawan.Produtos.Domain.Entities.Importar;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.CategoriaProdutoValidators
 {

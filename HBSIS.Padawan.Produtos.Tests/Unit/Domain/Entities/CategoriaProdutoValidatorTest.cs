@@ -16,9 +16,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly ICamposCategoriaProdutoValidator _camposCategoriaProdutoValidator;
+        private readonly ICriarCategoriaProdutoValidator _camposCategoriaProdutoValidator;
         private readonly IIdCategoriaProdutoValidator _idCategoriaProdutoValidator;
-        private readonly IUpdateCategoriaProdutoValidator _updateCategoriaProdutoValidator;
+        private readonly IAtualizarCategoriaProdutoValidator _updateCategoriaProdutoValidator;
         private const string ID_VALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63dc3";
         private const string ID_INVALIDO = "71cb18ba-7e4f-4f29-144e-08d86ae63cd3";
         private const string NOME_INVALIDO_500 = "500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES 500CARACTERES" +
@@ -34,9 +34,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
 
-            _camposCategoriaProdutoValidator = new CamposCategoriaProdutoValidator(_fornecedorRepository, _categoriaProdutoRepository);
+            _camposCategoriaProdutoValidator = new CriarCategoriaProdutoValidator(_fornecedorRepository, _categoriaProdutoRepository);
             _idCategoriaProdutoValidator = new IdCategoriaProdutoValidator(_categoriaProdutoRepository);
-            _updateCategoriaProdutoValidator = new UpdateCategoriaProdutoValidator(_categoriaProdutoRepository, _fornecedorRepository);
+            _updateCategoriaProdutoValidator = new AtualizarCategoriaProdutoValidator(_categoriaProdutoRepository, _fornecedorRepository);
 
             _fornecedorRepository.ExistsByIdAsync(Guid.Parse(ID_VALIDO)).Returns(true);
             _categoriaProdutoRepository.ExistsByNameAsync(NOME_CADASTRADO).Returns(true);

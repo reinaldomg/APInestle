@@ -3,14 +3,11 @@ using FluentValidation.Validators;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.FornecedorValidators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.FornecedorValidators
 {
-    public class CamposFornecedorValidator : AbstractValidator<Fornecedor>, ICamposFornecedorValidator 
+    public class CamposFornecedorValidator : AbstractValidator<Fornecedor>, ICriarFornecedorValidator 
     {
         private readonly IFornecedorRepository _fornecedorRepository;
 

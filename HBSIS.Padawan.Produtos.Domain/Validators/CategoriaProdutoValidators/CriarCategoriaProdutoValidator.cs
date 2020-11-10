@@ -2,18 +2,15 @@
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.CategoriaProdutoValidators
 {
-    public class CamposCategoriaProdutoValidator : AbstractValidator<CategoriaProduto>, ICamposCategoriaProdutoValidator
+    public class CriarCategoriaProdutoValidator : AbstractValidator<CategoriaProduto>, ICriarCategoriaProdutoValidator
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
 
-        public CamposCategoriaProdutoValidator(IFornecedorRepository fornecedorRepository, ICategoriaProdutoRepository categoriaProdutoRepository)
+        public CriarCategoriaProdutoValidator(IFornecedorRepository fornecedorRepository, ICategoriaProdutoRepository categoriaProdutoRepository)
         {
             _fornecedorRepository = fornecedorRepository;
             _categoriaProdutoRepository = categoriaProdutoRepository;

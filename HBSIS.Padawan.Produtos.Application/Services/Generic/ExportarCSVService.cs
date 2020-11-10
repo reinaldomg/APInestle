@@ -1,7 +1,5 @@
 ﻿using CsvHelper;
 using HBSIS.Padawan.Produtos.Application.Interfaces.Generic;
-using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;

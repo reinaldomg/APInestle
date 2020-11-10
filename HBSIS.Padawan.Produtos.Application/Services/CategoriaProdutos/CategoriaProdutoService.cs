@@ -1,13 +1,10 @@
 ﻿using FluentValidation.Results;
-using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
-using HBSIS.Padawan.Produtos.Domain.Result;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
@@ -15,11 +12,11 @@ namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
     public class CategoriaProdutoService : ICategoriaProdutoService
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
-        private readonly ICamposCategoriaProdutoValidator _camposCategoriaProdutoValidator;
+        private readonly ICriarCategoriaProdutoValidator _camposCategoriaProdutoValidator;
         private readonly IIdCategoriaProdutoValidator _idCategoriaProdutoValidator;
-        private readonly IUpdateCategoriaProdutoValidator _updateCategoriaProdutoValidator;
+        private readonly IAtualizarCategoriaProdutoValidator _updateCategoriaProdutoValidator;
 
-        public CategoriaProdutoService(ICategoriaProdutoRepository categoriaProdutoRepository, ICamposCategoriaProdutoValidator categoriaProdutoValidator, IIdCategoriaProdutoValidator idCategoriaProdutoValidator, IUpdateCategoriaProdutoValidator updateCategoriaProdutoValidator)
+        public CategoriaProdutoService(ICategoriaProdutoRepository categoriaProdutoRepository, ICriarCategoriaProdutoValidator categoriaProdutoValidator, IIdCategoriaProdutoValidator idCategoriaProdutoValidator, IAtualizarCategoriaProdutoValidator updateCategoriaProdutoValidator)
         {
             _categoriaProdutoRepository = categoriaProdutoRepository;
             _camposCategoriaProdutoValidator = categoriaProdutoValidator;

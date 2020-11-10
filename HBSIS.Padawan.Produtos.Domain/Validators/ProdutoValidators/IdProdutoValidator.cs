@@ -1,10 +1,7 @@
 ﻿using FluentValidation;
-using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
 {
