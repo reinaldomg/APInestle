@@ -14,9 +14,14 @@ namespace HBSIS.Padawan.Produtos.Infra.Repository
         {
         }
 
+        public async Task<CategoriaProduto> GetEntityByNameAsync(string name)
+        {
+            return await DbSet.FirstOrDefaultAsync(x => x.Nome == name);
+        }
+
         public async Task<bool> ExistsByNameAsync(string name)
         {
-            return await DbSet.Where(x => x.Nome == name).AnyAsync();
+            return await DbSet.AnyAsync(x => x.Nome == name);
         }
-    }
+    }   
 }

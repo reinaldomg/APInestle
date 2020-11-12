@@ -1,14 +1,10 @@
-﻿using HBSIS.Padawan.Produtos.Domain.Entities;
-using HBSIS.Padawan.Produtos.Domain.Entities.Importar;
+﻿using HBSIS.Padawan.Produtos.Domain.DTO;
+using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
-using HBSIS.Padawan.Produtos.Domain.Validators;
 using HBSIS.Padawan.Produtos.Domain.Validators.CategoriaProdutoValidators;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
@@ -74,9 +70,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             };
         }
 
-        private static CategoriaProdutoImportar GerarCategoriaProdutoImportar(string cnpj, string nome)
+        private static CategoriaProdutoDTO GerarCategoriaProdutoImportar(string cnpj, string nome)
         {
-            return new CategoriaProdutoImportar()
+            return new CategoriaProdutoDTO()
             {
                 Cnpj = cnpj,
                 Nome = nome

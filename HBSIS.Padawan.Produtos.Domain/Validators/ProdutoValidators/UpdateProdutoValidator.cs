@@ -16,7 +16,7 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
             _produtoRepository = produtoRepository;
 
             RuleFor(x => x.Id).SetValidator(new IdProdutoValidator(_produtoRepository));
-            RuleFor(x => x).SetValidator(new CamposProdutoValidator(_categoriaProdutoRepository));
+            RuleFor(x => x).SetValidator(new CriarProdutoValidator(_categoriaProdutoRepository));
         }
     }
 }

@@ -1,15 +1,13 @@
-﻿using HBSIS.Padawan.Produtos.Application.Interfaces.CategoriaProdutos;
-using HBSIS.Padawan.Produtos.Application.Services.Generic;
+﻿using HBSIS.Padawan.Produtos.Domain.DTO;
 using HBSIS.Padawan.Produtos.Domain.Entities;
-using HBSIS.Padawan.Produtos.Domain.Entities.Importar;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutos;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators;
-using System;
-using System.Reflection;
+using HBSIS.Padawan.Produtos.Infra.Services.Generic;
 
-namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
+namespace HBSIS.Padawan.Produtos.Infra.Services.CategoriaProdutos
 {
-    public class CategoriaProdutoImportarCSVService : ImportarCSVService<CategoriaProduto, CategoriaProdutoImportar>, ICategoriaProdutoImportarCSVService
+    public class CategoriaProdutoImportarCSVService : ImportarCSVService<CategoriaProduto, CategoriaProdutoDTO>, ICategoriaProdutoImportarCSVService
     {
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -23,7 +21,7 @@ namespace HBSIS.Padawan.Produtos.Application.Services.CategoriaProdutos
             _fornecedorRepository = fornecedorRepository;
         }
 
-        public override void CriarObjeto(CategoriaProdutoImportar item)
+        public override void SalvarEntidade(CategoriaProdutoDTO item)
         {
             var objeto = new CategoriaProduto()
             {

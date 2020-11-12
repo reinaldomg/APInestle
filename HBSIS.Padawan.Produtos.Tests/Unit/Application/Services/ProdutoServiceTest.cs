@@ -33,7 +33,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Application.Services
         {
             _produtoRepository = Substitute.For<IProdutoRepository>();
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
-            _camposProdutoValidator = new CamposProdutoValidator(_categoriaProdutoRepository);
+            _camposProdutoValidator = new CriarProdutoValidator(_categoriaProdutoRepository);
             _idProdutoValidator = new IdProdutoValidator(_produtoRepository);
             _updateProdutoValidator = new UpdateProdutoValidator(_categoriaProdutoRepository, _produtoRepository);
             _produtoService = new ProdutoService(_produtoRepository, _camposProdutoValidator, _idProdutoValidator, _updateProdutoValidator);

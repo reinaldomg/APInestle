@@ -1,16 +1,16 @@
 ﻿using CsvHelper;
-using HBSIS.Padawan.Produtos.Application.Interfaces.Generic;
+using HBSIS.Padawan.Produtos.Domain.Interfaces.Generic;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBSIS.Padawan.Produtos.Application.Services.Generic
+namespace HBSIS.Padawan.Produtos.Infra.Services.Generic
 {
     public class ExportarCSVService<T> : IExportarCSVService<T>
     {
-        public async Task<byte[]> ExportarCSV(IEnumerable<T> entities)
+        public async Task<byte[]> ExportarCSVAsync(IEnumerable<T> entities)
         {
             using (var memory = new MemoryStream())
             using (var writer = new StreamWriter(memory, Encoding.GetEncoding("iso-8859-1")))

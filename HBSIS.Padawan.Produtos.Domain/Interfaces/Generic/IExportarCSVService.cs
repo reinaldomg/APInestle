@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace HBSIS.Padawan.Produtos.Application.Interfaces.Generic
+namespace HBSIS.Padawan.Produtos.Domain.Interfaces.Generic
 {
     public interface IExportarCSVService<T>
     {
-        Task<byte[]> ExportarCSV(IEnumerable<T> entities);
+        Task<byte[]> ExportarCSVAsync(IEnumerable<T> entities);
     }
 }

@@ -20,14 +20,12 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
     public class CategoriaProdutoController : ControllerBase
     {
         private readonly ICategoriaProdutoService _categoriaProdutoService;
-        private readonly ICategoriaProdutoExportarCSVService _categoriaProdutoExportarCSVService;
-        private readonly ICategoriaProdutoImportarCSVService _categoriaProdutoImportarCSVService;
+        private readonly ICategoriaProdutoCSVService _categoriaProdutoCSVService;
 
-        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICategoriaProdutoExportarCSVService categoriaProdutoExportarCSVService, ICategoriaProdutoImportarCSVService categoriaProdutoImportarCSVService)
+        public CategoriaProdutoController(ICategoriaProdutoService fornecedorService, ICategoriaProdutoCSVService categoriaProdutoCSVService)
         {
             _categoriaProdutoService = fornecedorService;
-            _categoriaProdutoExportarCSVService = categoriaProdutoExportarCSVService;
-            _categoriaProdutoImportarCSVService = categoriaProdutoImportarCSVService;
+            _categoriaProdutoCSVService = categoriaProdutoCSVService;
         }
 
         [HttpPost]
@@ -80,7 +78,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         {
             try
             {
-                var result = await _categoriaProdutoExportarCSVService.ExportarCSV();
+                var result = await _categoriaProdutoCSVService.ExportarCSVAsync();
                 var memory = new MemoryStream(result);
                 return new FileStreamResult(memory, "application/csv") { FileDownloadName = "CategoriaProduto.csv" };
             }
@@ -96,7 +94,7 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         {
             try
             {
-                var result = await _categoriaProdutoImportarCSVService.ImportarCSV(file);
+                var result = await _categoriaProdutoCSVService.ImportarCSVAsync(file);
                 return Ok(result.ToList());
             }
             catch(Exception ex)

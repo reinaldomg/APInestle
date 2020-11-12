@@ -34,7 +34,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
             _produtoRepository = Substitute.For<IProdutoRepository>();
             _categoriaProdutoRepository = Substitute.For<ICategoriaProdutoRepository>();
 
-            _produtoValidatorCampos = new CamposProdutoValidator(_categoriaProdutoRepository);
+            _produtoValidatorCampos = new CriarProdutoValidator(_categoriaProdutoRepository);
             _produtoValidatorID = new IdProdutoValidator(_produtoRepository);
             _produtoValidatorUpdate = new UpdateProdutoValidator(_categoriaProdutoRepository, _produtoRepository);
             

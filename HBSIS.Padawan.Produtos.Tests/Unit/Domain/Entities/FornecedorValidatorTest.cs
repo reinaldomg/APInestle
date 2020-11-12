@@ -27,7 +27,7 @@ namespace HBSIS.Padawan.Produtos.Tests.Unit.Domain.Entities
         public FornecedorValidatorTest()
         {
             _fornecedorRepository = Substitute.For<IFornecedorRepository>();
-            _camposFornecedorValidator = new CamposFornecedorValidator(_fornecedorRepository);
+            _camposFornecedorValidator = new CriarFornecedorValidator(_fornecedorRepository);
 
             _fornecedorRepository.ExistsByCnpjAsync(CNPJ_CADASTRADO).Returns(true);
         }

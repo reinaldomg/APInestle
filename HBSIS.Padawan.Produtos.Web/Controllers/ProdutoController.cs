@@ -1,6 +1,7 @@
 ﻿using HBSIS.Padawan.Produtos.Application.Interfaces;
 using HBSIS.Padawan.Produtos.Application.Interfaces.Produtos;
 using HBSIS.Padawan.Produtos.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,13 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoService _produtoService;
-        private readonly IProdutosExportarCSVService _produtosExportarCSVService;
+        private readonly IProdutoCSVService _produtoCSVService;
 
-        public ProdutoController(IProdutoService produtoService, IProdutosExportarCSVService produtosExportarCSVService)
+        public ProdutoController(IProdutoService produtoService,
+            IProdutoCSVService produtoCSVService)
         {
             _produtoService = produtoService;
-            _produtosExportarCSVService = produtosExportarCSVService;
+            _produtoCSVService = produtoCSVService;
         }
 
         [HttpPost]
@@ -73,13 +75,28 @@ namespace HBSIS.Padawan.Produtos.Web.Controllers
         {
             try
             {
-                var result = await _produtosExportarCSVService.ExportarCSV();
+                var result = await _produtoCSVService.ExportarCSVAsync();
                 var memory = new MemoryStream(result);
                 return new FileStreamResult(memory, "application/csv") { FileDownloadName = "Produto.csv" };
             }
             catch
             {
                 return BadRequest("Um erro aconteceu ao exportar o arquivo");
+            }
+        }
+
+        [HttpPost]
+        [Route("Importar")]
+        public async Task<IActionResult> ImportAsync(IFormFile file)
+        {
+            try
+            {
+                var result = await _produtoCSVService.ImportarCSVAsync(file);
+                return Ok(result.ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

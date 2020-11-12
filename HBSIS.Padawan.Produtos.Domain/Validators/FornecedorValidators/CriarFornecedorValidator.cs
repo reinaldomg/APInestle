@@ -7,11 +7,11 @@ using System.Text.RegularExpressions;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.FornecedorValidators
 {
-    public class CamposFornecedorValidator : AbstractValidator<Fornecedor>, ICriarFornecedorValidator 
+    public class CriarFornecedorValidator : AbstractValidator<Fornecedor>, ICriarFornecedorValidator 
     {
         private readonly IFornecedorRepository _fornecedorRepository;
 
-        public CamposFornecedorValidator(IFornecedorRepository fornecedorRepository)
+        public CriarFornecedorValidator(IFornecedorRepository fornecedorRepository)
         {
             _fornecedorRepository = fornecedorRepository;
 

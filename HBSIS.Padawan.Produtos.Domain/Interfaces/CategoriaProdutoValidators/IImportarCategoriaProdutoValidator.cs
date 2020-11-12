@@ -1,12 +1,9 @@
 ﻿using FluentValidation;
-using HBSIS.Padawan.Produtos.Domain.Entities.Importar;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using HBSIS.Padawan.Produtos.Domain.DTO;
 
 namespace HBSIS.Padawan.Produtos.Domain.Interfaces.CategoriaProdutoValidators
 {
-    public interface IImportarCategoriaProdutoValidator : IValidator<CategoriaProdutoImportar>
+    public interface IImportarCategoriaProdutoValidator : IValidator<CategoriaProdutoDTO>
     {
     }
 }

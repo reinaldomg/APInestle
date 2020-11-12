@@ -1,16 +1,19 @@
 ﻿using FluentValidation;
-using HBSIS.Padawan.Produtos.Domain.Entities;
+using HBSIS.Padawan.Produtos.Domain.DTO;
 using HBSIS.Padawan.Produtos.Domain.Interfaces;
 using HBSIS.Padawan.Produtos.Domain.Interfaces.ProdutoValidators;
 
 namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
 {
-    public class CamposProdutoValidator : AbstractValidator<Produto>, ICriarProdutoValidator
+    public class ImportarProdutoValidator : AbstractValidator<ProdutoDTO>, IImportarProdutoValidator
     {
+        private readonly IProdutoRepository _produtoRepository;
         private readonly ICategoriaProdutoRepository _categoriaProdutoRepository;
 
-        public CamposProdutoValidator(ICategoriaProdutoRepository categoriaProdutoRepository)
+        public ImportarProdutoValidator(IProdutoRepository produtoRepository,
+            ICategoriaProdutoRepository categoriaProdutoRepository)
         {
+            _produtoRepository = produtoRepository;
             _categoriaProdutoRepository = categoriaProdutoRepository;
 
             ValidarNome();
@@ -18,14 +21,18 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
             VallidarUnidade();
             ValidarPreco();
             ValidarValidade();
-            ValidarCategoriaProduto();
+            ValidarNomeCategoriaProduto();
         }
 
         private void ValidarNome()
         {
             RuleFor(x => x.Nome)
                 .NotEmpty().WithMessage("Campo Nome obrigatório")
-                .Length(0, 500).WithMessage("Nome excede o tamanho máximo");
+                .Length(0, 500).WithMessage("Nome excede o tamanho máximo")
+                .MustAsync(async (nome, _) =>
+                {
+                    return !await _produtoRepository.ExistsByNameAsync(nome);
+                }).WithMessage("Nome de Produto já cadastrado");
         }
 
         private void ValidarPeso()
@@ -55,13 +62,14 @@ namespace HBSIS.Padawan.Produtos.Domain.Validators.ProdutoValidators
                 .NotNull().WithMessage("Campo Validade obrigatório");
         }
 
-        private void ValidarCategoriaProduto()
+        private void ValidarNomeCategoriaProduto()
         {
-            RuleFor(x => x.CategoriaProdutoId)
-               .MustAsync(async (id, _) =>
-               {
-                   return await _categoriaProdutoRepository.ExistsByIdAsync(id);
-               }).WithMessage("CategoriaProduto não cadastrada");
+            RuleFor(x => x.NomeCategoriaProduto)
+                .NotEmpty().WithMessage("Campo NomeCategoriaProduto obrigatório")
+                .MustAsync(async (nome, _) =>
+                {
+                    return await _categoriaProdutoRepository.ExistsByNameAsync(nome);
+                }).WithMessage("CategoriaProduto com esse Nome não cadastrado");
         }
     }
 }
