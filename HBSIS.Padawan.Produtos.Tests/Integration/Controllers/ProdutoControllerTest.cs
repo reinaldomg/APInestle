@@ -17,28 +17,19 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
         private readonly ProdutoRepository _produtoRepository;
 
         private Produto _produtoA;
-        private Produto _produtoB;
-        private CategoriaProduto _categoriaProduto;
-        private Fornecedor _fornecedor;
-
         private List<Produto> _activeProdutos;
 
         public ProdutoControllerTest() : base("api/produto")
         {
-            _fornecedor = new FornecedorBuilder().Build();
+            var fornecedor = FornecedorHelper.FornecedorGugu;
 
-            _categoriaProduto = new CategoriaProdutoBuilder()
-                .WithFornecedorId(_fornecedor.Id).Build();
+            var categoriaProduto = CategoriaProdutoHelper.CategoriaProdutoBalaJuquinha;
 
-            _produtoA = new ProdutoBuilder()
-                .WithCategoriaProdutoId(_categoriaProduto.Id).Build();
-
-            _produtoB = new ProdutoBuilder().Alternative()
-                .WithCategoriaProdutoId(_categoriaProduto.Id).Build();
+            _produtoA = ProdutoHelper.ProdutoBolacha;
 
             _activeProdutos = new List<Produto>() { _produtoA };
 
-            Factory.SeedData(_fornecedor, _categoriaProduto, _produtoA);
+            Factory.SeedData(fornecedor, categoriaProduto, _produtoA);
 
             _produtoRepository = new ProdutoRepository(Factory.GetContext());
         }
@@ -59,14 +50,16 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
         [Fact]
         public async Task Deve_Cadastrar_Corretamente_Um_Produto()
         {
-            var response = await Client.PostAsJsonAsync($"{ControllerUri}/Cadastrar", _produtoB);
+            var produtoB = ProdutoHelper.ProdutoBanana;
+
+            var response = await Client.PostAsJsonAsync($"{ControllerUri}/Cadastrar", produtoB);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var produto = await _produtoRepository.GetAllAsync();
 
             produto.Should().HaveCount(_activeProdutos.Count + 1);
-            produto.Should().ContainEquivalentOf(_produtoB);
+            produto.Should().ContainEquivalentOf(produtoB);
         }
 
         [Fact]
@@ -76,9 +69,9 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var itens = await _produtoRepository.GetAllAsync();
+            var produtoExiste = await _produtoRepository.ExistsByIdAsync(_produtoA.Id);
 
-            itens.Should().BeEmpty();
+            produtoExiste.Should().BeFalse();
         }
 
         [Fact]

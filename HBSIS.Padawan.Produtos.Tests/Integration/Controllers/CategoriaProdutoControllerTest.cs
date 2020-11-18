@@ -2,6 +2,7 @@
 using HBSIS.Padawan.Produtos.Domain.Entities;
 using HBSIS.Padawan.Produtos.Infra.Repository;
 using HBSIS.Padawan.Produtos.Tests.Builders;
+using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -17,23 +18,18 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
         private readonly CategoriaProdutoRepository _categoriaProdutoRepository;
         
         private readonly CategoriaProduto _categoriaProdutoA;
-        private readonly CategoriaProduto _categoriaProdutoB;
-        private readonly Fornecedor _fornecedor;
 
         private List<CategoriaProduto> _activeCategoriaProduto;
 
         public CategoriaProdutoControllerTest() : base("api/CategoriaProduto")
         {
-            _fornecedor = new FornecedorBuilder().Build();
+            var fornecedor = FornecedorHelper.FornecedorGugu;
 
-            _categoriaProdutoA = new CategoriaProdutoBuilder()
-                .WithFornecedorId(_fornecedor.Id).Build();
-            _categoriaProdutoB = new CategoriaProdutoBuilder()
-                .Alternative().WithFornecedorId(_fornecedor.Id).Build();
+            _categoriaProdutoA = CategoriaProdutoHelper.CategoriaProdutoBalaJuquinha;
 
             _activeCategoriaProduto = new List<CategoriaProduto> { _categoriaProdutoA };
 
-            Factory.SeedData(_fornecedor, _categoriaProdutoA);
+            Factory.SeedData(fornecedor, _categoriaProdutoA);
 
             _categoriaProdutoRepository = new CategoriaProdutoRepository(Factory.GetContext());
         }
@@ -54,14 +50,16 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
         [Fact]
         public async Task Deve_Cadastrar_Um_Novo_CategoriaProduto()
         {
-            var response = await Client.PostAsJsonAsync($"{ControllerUri}/Cadastrar", _categoriaProdutoB);
+            var categoriaProdutoB = CategoriaProdutoHelper.CategoriaProdutoBalaSaoJoao;
+
+            var response = await Client.PostAsJsonAsync($"{ControllerUri}/Cadastrar", categoriaProdutoB);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var categoriaProduto = await _categoriaProdutoRepository.GetAllAsync();
+            var categoriaProdutoList = await _categoriaProdutoRepository.GetAllAsync();
 
-            categoriaProduto.Should().HaveCount(_activeCategoriaProduto.Count + 1);
-            categoriaProduto.Should().ContainEquivalentOf(_categoriaProdutoB);
+            categoriaProdutoList.Should().HaveCount(_activeCategoriaProduto.Count + 1);
+            categoriaProdutoList.Should().ContainEquivalentOf(categoriaProdutoB);
         }
 
         [Fact]
@@ -70,10 +68,10 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
             var response = await Client.DeleteAsync($"{ControllerUri}/Deletar?id={_categoriaProdutoA.Id}");
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+ 
+            var categoriaProduto = await _categoriaProdutoRepository.ExistsByIdAsync(_categoriaProdutoA.Id);
 
-            var itens = await _categoriaProdutoRepository.GetAllAsync();
-
-            itens.Should().BeEmpty();
+            categoriaProduto.Should().BeFalse();
         }
 
         [Fact]
@@ -84,6 +82,11 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
             var response = await Client.PutAsJsonAsync($"{ControllerUri}/Atualizar", _categoriaProdutoA);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var categoriaProdutoAtualizado = await _categoriaProdutoRepository.GetByIdAsync(_categoriaProdutoA.Id);
+
+            categoriaProdutoAtualizado
+                .Should().BeEquivalentTo(_categoriaProdutoA, x => x.Excluding(p => p.Fornecedor));
         }
     }
 }

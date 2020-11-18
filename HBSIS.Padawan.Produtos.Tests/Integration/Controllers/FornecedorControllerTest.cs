@@ -23,16 +23,16 @@ namespace HBSIS.Padawan.Produtos.Tests.Integration.Controllers
         [Fact]
         public async Task Deve_Cadastrar_Um_Novo_Fornecedor()
         {
-            var fornecedorRequest = new FornecedorBuilder().Build();
+            var fornecedorRequest = FornecedorHelper.FornecedorGugu;
 
             var response = await Client.PostAsJsonAsync($"{ControllerUri}/Cadastrar", fornecedorRequest);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var produto = await _fornecedorRepository.GetAllAsync();
+            var fornecedorList = await _fornecedorRepository.GetAllAsync();
 
-            produto.Should().HaveCount(1);
-            produto.Should().ContainEquivalentOf(fornecedorRequest);
+            fornecedorList.Should().HaveCount(1);
+            fornecedorList.Should().ContainEquivalentOf(fornecedorRequest);
         }
     }
 }
